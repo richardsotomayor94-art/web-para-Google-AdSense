@@ -1,2 +1,141 @@
-# web-para-Google-AdSense
-Proyecto web de contenido original para monetización con Google AdSense.
+# ErgoHack
+
+Plataforma de afiliación + contenido (SEO/GEO) sobre **ergonomía y setup de teletrabajo** para el mercado hispanohablante. Se monetiza con **Google AdSense** (guías informativas) y **Amazon Afiliados** (reseñas y comparativas), con geotargeting Amazon.es / Amazon.com.
+
+## Stack
+
+| Capa | Tecnología |
+| --- | --- |
+| Framework | Next.js 16 (App Router, **Cache Components + Partial Prefetching**), TypeScript estricto |
+| Estilos | Tailwind CSS v4 + componentes estilo shadcn/ui (`components.json` listo para `npx shadcn add`) |
+| Datos | Supabase (PostgreSQL) + **Drizzle ORM** (`postgres-js`) |
+| SEO | Metadata API, JSON-LD, `sitemap.ts`, `robots.ts`, OG dinámicas con `next/og` (motor de `@vercel/og`), `/llms.txt` |
+| Analítica | GA4 / GTM con `@next/third-parties/google`, tabla propia `click_analytics` |
+| Tema | `next-themes` (claro / oscuro / sistema) |
+
+## Puesta en marcha
+
+```bash
+npm install
+cp .env.example .env.local   # rellena los valores
+npm run dev
+```
+
+Sin `DATABASE_URL` la web funciona en **modo demo** con datos ficticios (`src/lib/data/demo-data.ts`, ASIN `B0DEMO…`); las escrituras de la API devuelven `503`.
+
+### Base de datos (Supabase)
+
+1. Crea un proyecto en Supabase y copia la cadena de conexión del **Transaction pooler** (puerto 6543) en `DATABASE_URL`. Para migraciones puedes definir `DATABASE_MIGRATION_URL` con la conexión directa (puerto 5432).
+2. Aplica las migraciones y, si quieres, los datos de ejemplo:
+
+```bash
+npm run db:migrate
+npm run db:seed
+```
+
+Migraciones en `drizzle/`: `0000_init.sql` (tablas, índices, FK) y `0001_rls_and_triggers.sql` (triggers `updated_at` y **RLS**: la API REST pública de Supabase solo puede leer contenido publicado; analítica y logs quedan cerrados). Tras cambiar `src/db/schema.ts`: `npm run db:generate`.
+
+### Scripts
+
+| Script | Uso |
+| --- | --- |
+| `dev` / `build` / `start` | Next.js |
+| `lint` / `typecheck` | ESLint / `next typegen && tsc` |
+| `db:generate` / `db:migrate` / `db:studio` / `db:seed` | Drizzle |
+
+## Arquitectura
+
+```
+src/
+├─ app/
+│  ├─ page.tsx                 Home (hero E-E-A-T, calculadora, categorías, destacados)
+│  ├─ guias/[slug]             Guías (AdSense in-article + final, FAQPage, TechArticle)
+│  ├─ resenas/[slug]           Reseñas (sin AdSense en el primer pliegue, Product + Review)
+│  ├─ comparar/[slug]          A vs B (slug canónico ordenado, 308 si se invierte)
+│  ├─ api/v1/…                 Webhooks n8n/Make (x-api-key)
+│  ├─ api/track/click          Registro público de clics (sendBeacon)
+│  ├─ llms.txt, llms-full.txt  Mapa y contenido íntegro para motores generativos
+│  ├─ ads.txt, sitemap.ts, robots.ts, opengraph-image.tsx
+├─ components/ (ui, product, article, ads, layout, seo, theme, tools)
+├─ db/ (schema.ts, index.ts)
+├─ lib/ (data, api, seo, amazon.ts, markdown.ts, analytics.ts)
+└─ proxy.ts                    Cookie de país para el geotargeting
+```
+
+**Caché.** Todas las lecturas (`src/lib/data`) usan `"use cache"` + `cacheTag`. Las páginas se prerenderizan en build y los webhooks invalidan con `revalidateTag` (`products`, `articles`, `categories`), así que precios y artículos nuevos aparecen sin redeploy. Las rutas nuevas que no existían en build se generan en la primera visita (los bots reciben el HTML completo y códigos 404/308 reales).
+
+**Geotargeting.** `proxy.ts` guarda el país (`x-vercel-ip-country`) en la cookie `eh_country`. `AffiliateButton` renderiza Amazon.es en el HTML estático y, tras hidratar, cambia a Amazon.com fuera de ES/PT/AD/GI. Así las páginas siguen siendo estáticas.
+
+**Enlaces de afiliado.** Siempre `rel="sponsored nofollow noopener"` y `target="_blank"`. El tag se añade automáticamente (`AMAZON_AFFILIATE_TAG_ES/US`) aunque n8n envíe la URL sin él. Cada clic dispara `trackEvent('amazon_click', { asin, price, country, marketplace, placement })` en GA4 y se guarda en `click_analytics`.
+
+**AdSense.** `<AdSenseBanner slot format responsive layout />` (cliente, alto reservado contra CLS). En guías se inserta automáticamente entre secciones `##` intermedias y al final. En reseñas solo aparece bajo el contenido principal. Configura los IDs de bloque con `NEXT_PUBLIC_ADSENSE_SLOT_IN_ARTICLE` y `NEXT_PUBLIC_ADSENSE_SLOT_DISPLAY`.
+
+**Contenido.** Las guías son Markdown (GFM). El shortcode `{{product:ASIN}}` inserta una ficha de producto con CTA en ese punto del texto.
+
+**JSON-LD.** `Organization` + `WebSite` (global), `BreadcrumbList`, `Product` + `Offer` + `Review` (nota editorial 0–10 con `positiveNotes` / `negativeNotes`), `TechArticle` con autor `Person` y credenciales, `FAQPage` e `ItemList`. No se emite `aggregateRating` con las valoraciones de Amazon: Google exige que las valoraciones procedan del propio sitio.
+
+## API v1 (n8n / Make)
+
+Todas requieren la cabecera `x-api-key: $API_SECRET_KEY` (comparación en tiempo constante). Cada llamada queda registrada en `automation_logs`.
+
+### `POST /api/v1/products/sync`
+
+Crea o actualiza por ASIN. Solo se modifican los campos enviados, así que la actualización diaria de precios puede mandar únicamente el precio. Acepta `{ products: [...] }`, un array o un único objeto (máx. 500).
+
+```bash
+curl -X POST https://www.ergohack.es/api/v1/products/sync \
+  -H "x-api-key: $API_SECRET_KEY" -H "content-type: application/json" \
+  -d '{
+    "products": [
+      {
+        "asin": "B0XXXXXXXX",
+        "title": "Silla X — Silla ergonómica con lumbar regulable",
+        "price_current": 199.9, "price_original": 249.9,
+        "category_slug": "sillas-ergonomicas",
+        "image_url": "https://m.media-amazon.com/images/I/xxxx.jpg",
+        "features": { "Reposabrazos": "4D" },
+        "pros": ["…"], "cons": ["…"],
+        "rating": 4.5, "review_count": 1200,
+        "editorial_rating": 8.7, "badge": "Mejor Calidad-Precio"
+      },
+      { "asin": "B0YYYYYYYY", "price_current": 89.99 }
+    ]
+  }'
+```
+
+Respuesta: `{ ok, status: "success"|"partial"|"error", created[], updated[], errors[] }`. `discount_percent` se calcula solo si no se envía. Si la categoría no existe, se crea.
+
+### `POST /api/v1/articles/publish`
+
+Crea o actualiza por `slug` (se genera a partir del título si falta). Asocia productos por `related_asins`, por los shortcodes `{{product:ASIN}}` y, con `auto_link_products` (activo por defecto), por ASIN o nombres de producto citados en el texto.
+
+```json
+{
+  "title": "Cómo elegir silla ergonómica",
+  "content": "Intro…\n\n## Qué mirar\n\n{{product:B0XXXXXXXX}}",
+  "excerpt": "…",
+  "seo_title": "…", "seo_description": "…",
+  "author": { "name": "Laura Méndez", "role": "Fisioterapeuta", "credentials": ["Grado en Fisioterapia"] },
+  "faqs": [{ "question": "…", "answer": "…" }],
+  "related_asins": ["B0XXXXXXXX"],
+  "status": "published"
+}
+```
+
+### `GET /api/v1/analytics/export`
+
+`?from=2026-10-01&to=2026-10-31` (por defecto los últimos 30 días). Devuelve los totales y los clics agregados por producto, país, ubicación y día. Con `&format=csv` descarga los clics en bruto.
+
+## Despliegue en Vercel
+
+1. Importa el repo y configura las variables de `.env.example`, incluida `NEXT_PUBLIC_SITE_URL` con el dominio final.
+2. El build se conecta a la base de datos para prerenderizar, así que `DATABASE_URL` debe estar disponible también en build.
+3. Comprueba `/ads.txt`, `/llms.txt`, `/sitemap.xml` y envía el sitemap a Search Console.
+
+> **Edge Runtime:** Next.js 16 lo marca como obsoleto y no es compatible con Cache Components. Todo se ejecuta en el runtime Node.js por defecto (Vercel Fluid Compute), que es lo que recomienda Vercel.
+
+## Pendiente antes de producción
+
+- **CMP / consentimiento de cookies**: Google exige una CMP certificada (TCF v2.2) para servir AdSense en el EEE/Reino Unido. Puedes usar la de Google (AdSense → Privacidad y mensajes) o una externa.
+- Completar los datos del titular en `/aviso-legal` y revisar `/privacidad` con un asesor legal.
+- Sustituir los datos de demostración por productos reales vía `products/sync`.

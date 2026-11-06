@@ -1,0 +1,145 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ─── Tokens (shadcn/ui, paleta "neutral" + acento esmeralda y CTA naranja) ─── */
+:root {
+  --radius: 0.75rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.18 0.01 260);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.18 0.01 260);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.18 0.01 260);
+  --primary: oklch(0.52 0.12 165);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.967 0.003 260);
+  --secondary-foreground: oklch(0.21 0.01 260);
+  --muted: oklch(0.967 0.003 260);
+  --muted-foreground: oklch(0.48 0.015 260);
+  --accent: oklch(0.96 0.03 165);
+  --accent-foreground: oklch(0.3 0.07 165);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.92 0.004 260);
+  --input: oklch(0.92 0.004 260);
+  --ring: oklch(0.52 0.12 165);
+  /* CTA de compra (naranja de alto contraste) */
+  --cta: oklch(0.7 0.18 50);
+  --cta-hover: oklch(0.64 0.18 45);
+  --cta-foreground: oklch(0.2 0.03 50);
+  --success: oklch(0.6 0.15 150);
+  --warning: oklch(0.8 0.15 85);
+}
+
+.dark {
+  --background: oklch(0.16 0.01 260);
+  --foreground: oklch(0.96 0.003 260);
+  --card: oklch(0.205 0.012 260);
+  --card-foreground: oklch(0.96 0.003 260);
+  --popover: oklch(0.205 0.012 260);
+  --popover-foreground: oklch(0.96 0.003 260);
+  --primary: oklch(0.72 0.13 165);
+  --primary-foreground: oklch(0.18 0.03 165);
+  --secondary: oklch(0.27 0.012 260);
+  --secondary-foreground: oklch(0.96 0.003 260);
+  --muted: oklch(0.27 0.012 260);
+  --muted-foreground: oklch(0.72 0.012 260);
+  --accent: oklch(0.3 0.05 165);
+  --accent-foreground: oklch(0.92 0.05 165);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.72 0.13 165);
+  --cta: oklch(0.76 0.16 55);
+  --cta-hover: oklch(0.8 0.15 60);
+  --cta-foreground: oklch(0.2 0.03 50);
+}
+
+@theme inline {
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-cta: var(--cta);
+  --color-cta-hover: var(--cta-hover);
+  --color-cta-foreground: var(--cta-foreground);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+/* ─── Tipografía del contenido editorial (Markdown) ─── */
+@layer components {
+  .prose-eh {
+    @apply max-w-none text-[1.0625rem] leading-relaxed text-foreground/90;
+  }
+  .prose-eh > * + * {
+    @apply mt-5;
+  }
+  .prose-eh h2 {
+    @apply mt-12 scroll-mt-24 text-2xl font-bold tracking-tight text-foreground;
+  }
+  .prose-eh h3 {
+    @apply mt-8 scroll-mt-24 text-xl font-semibold text-foreground;
+  }
+  .prose-eh a {
+    @apply font-medium text-primary underline underline-offset-4 hover:no-underline;
+  }
+  .prose-eh ul {
+    @apply list-disc space-y-2 pl-6;
+  }
+  .prose-eh ol {
+    @apply list-decimal space-y-2 pl-6;
+  }
+  .prose-eh strong {
+    @apply font-semibold text-foreground;
+  }
+  .prose-eh blockquote {
+    @apply rounded-r-lg border-l-4 border-primary bg-accent/50 px-5 py-3 text-foreground/80;
+  }
+  .prose-eh table {
+    @apply w-full border-collapse overflow-hidden rounded-lg text-sm;
+  }
+  .prose-eh th {
+    @apply border-b bg-muted px-4 py-2 text-left font-semibold;
+  }
+  .prose-eh td {
+    @apply border-b px-4 py-2;
+  }
+  .prose-eh code {
+    @apply rounded bg-muted px-1.5 py-0.5 font-mono text-sm;
+  }
+}
