@@ -4,12 +4,14 @@
  * Es idempotente: actualiza por slug/ASIN si ya existen.
  */
 import { config } from "dotenv";
+import { useHttpsProxyIfConfigured } from "./neon-proxy-support";
 import { drizzle } from "drizzle-orm/neon-serverless";
 import { createNeonPool } from "../src/db/neon";
 import * as schema from "../src/db/schema";
 import { demoArticles, demoCategories, demoProducts } from "../src/lib/data/demo-data";
 
 config({ path: [".env.local", ".env"], quiet: true });
+useHttpsProxyIfConfigured();
 
 async function main() {
   const url = process.env.DATABASE_MIGRATION_URL ?? process.env.DATABASE_URL;

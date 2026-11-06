@@ -10,13 +10,20 @@ import { Pool, neonConfig } from "@neondatabase/serverless";
 import ws from "ws";
 
 let configured = false;
+let webSocketOverride: typeof ws | undefined;
+
+/** Permite a los scripts sustituir el constructor de WebSocket (p. ej. para salir por un proxy HTTPS). */
+export function setNeonWebSocket(ctor: typeof ws) {
+  webSocketOverride = ctor;
+  if (configured) neonConfig.webSocketConstructor = ctor;
+}
 
 function configureNeon() {
   if (configured) return;
   configured = true;
 
   // Node.js: constructor de WebSocket explícito (necesario para Pool/transacciones).
-  neonConfig.webSocketConstructor = ws;
+  neonConfig.webSocketConstructor = webSocketOverride ?? ws;
 
   /**
    * Desarrollo sin cuenta de Neon: `NEON_LOCAL_WS_PROXY=localhost:5488/v1`

@@ -5,11 +5,13 @@
  * Usa DATABASE_MIGRATION_URL (conexión directa, recomendada) o DATABASE_URL.
  */
 import { config } from "dotenv";
+import { useHttpsProxyIfConfigured } from "./neon-proxy-support";
 import { drizzle } from "drizzle-orm/neon-serverless";
 import { migrate } from "drizzle-orm/neon-serverless/migrator";
 import { createNeonPool, describeConnectionString } from "../src/db/neon";
 
 config({ path: [".env.local", ".env"], quiet: true });
+useHttpsProxyIfConfigured();
 
 async function main() {
   const url = process.env.DATABASE_MIGRATION_URL || process.env.DATABASE_URL;

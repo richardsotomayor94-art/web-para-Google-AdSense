@@ -84,6 +84,8 @@ npm run db:seed
 
 **Migraciones.** `npm run db:generate` (drizzle-kit, sin conexión) crea el SQL en `drizzle/` a partir de `src/db/schema.ts`. `npm run db:migrate` (`scripts/migrate.ts`) lo aplica con el mismo driver de Neon, es idempotente y registra lo aplicado en `drizzle.__drizzle_migrations`. Ficheros actuales: `0000_init.sql` (tablas, índices, FK) y `0001_rls_and_triggers.sql` (triggers `updated_at` y RLS de solo lectura para roles que no sean el propietario, por si activas la Data API de Neon).
 
+**Detrás de un proxy.** Si existe `HTTPS_PROXY`, `db:migrate` y `db:seed` abren el WebSocket de Neon a través de ese proxy (`scripts/neon-proxy-support.ts`). La app desplegada no lo usa.
+
 **Ramas de Neon.** Puedes crear una rama de la base de datos para cada entorno (p. ej. `preview`) y poner su URL en las variables *Preview* de Vercel.
 
 ### Desarrollo local sin cuenta de Neon
