@@ -36,10 +36,11 @@ export function renderOg({ eyebrow, title, footer }: { eyebrow: string; title: s
               justifyContent: "center",
             }}
           >
-            EH
+            ET
           </div>
           <div style={{ display: "flex", fontSize: 36, fontWeight: 800 }}>
-            Ergo<span style={{ color: "#0f9f7a" }}>Hack</span>
+            <span>ErgoTop</span>
+            <span style={{ color: "#0f9f7a", marginLeft: -9 }}>Lab</span>
           </div>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>

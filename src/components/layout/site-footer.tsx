@@ -36,7 +36,7 @@ export function SiteFooter({ categories }: { categories: Category[] }) {
         <div>
           <p className="mb-3 text-sm font-semibold">Legal</p>
           <ul className="space-y-2 text-sm text-muted-foreground">
-            <li><Link href="/sobre-nosotros" className="hover:text-foreground">Quiénes somos</Link></li>
+            <li><Link href="/sobre-nosotros" className="hover:text-foreground">El laboratorio</Link></li>
             <li><Link href="/aviso-legal" className="hover:text-foreground">Aviso legal</Link></li>
             <li><Link href="/privacidad" className="hover:text-foreground">Privacidad y cookies</Link></li>
             <li><Link href="/afiliacion" className="hover:text-foreground">Transparencia y afiliación</Link></li>

@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Trophy } from "lucide-react";
 import type { AffiliateLinks } from "@/lib/amazon";
+import { siteConfig } from "@/lib/site";
 import type { Product } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { AffiliateButton } from "./affiliate-button";
@@ -100,7 +101,7 @@ export function ComparisonTable({ products, placement = "comparison_table" }: { 
                 </td>
               ))}
             </Row>
-            <Row label="Nota ErgoHack">
+            <Row label={`Nota ${siteConfig.name}`}>
               {products.map((p) => (
                 <td key={p.id} className={cn("p-3 text-base font-bold", p.editorialRating === bestScore && "text-primary")}>
                   {p.editorialRating?.toFixed(1) ?? "—"}

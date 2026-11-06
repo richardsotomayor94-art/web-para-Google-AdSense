@@ -1,4 +1,5 @@
 import { Star } from "lucide-react";
+import { siteConfig } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 export function RatingStars({
@@ -44,14 +45,14 @@ export function EditorialScore({ score, className }: { score: number | null; cla
   if (score == null) return null;
   const tone = score >= 9 ? "bg-success" : score >= 8 ? "bg-primary" : "bg-warning text-foreground";
   return (
-    <div className={cn("inline-flex items-center gap-2", className)} title="Nota editorial ErgoHack">
+    <div className={cn("inline-flex items-center gap-2", className)} title={`Nota editorial ${siteConfig.name}`}>
       <span className={cn("grid size-11 place-items-center rounded-lg text-lg font-bold text-white", tone)}>
         {score.toFixed(1)}
       </span>
       <span className="text-xs leading-tight text-muted-foreground">
         Nota
         <br />
-        ErgoHack
+        {siteConfig.name}
       </span>
     </div>
   );

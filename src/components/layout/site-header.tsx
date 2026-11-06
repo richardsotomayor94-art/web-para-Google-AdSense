@@ -7,9 +7,9 @@ import { Container } from "./container";
 export function Logo() {
   return (
     <Link href="/" className="flex items-center gap-2 font-bold tracking-tight" aria-label={`${siteConfig.name} — inicio`}>
-      <span className="grid size-8 place-items-center rounded-lg bg-primary text-sm text-primary-foreground">EH</span>
+      <span className="grid size-8 place-items-center rounded-lg bg-primary text-sm text-primary-foreground">ET</span>
       <span className="text-lg">
-        Ergo<span className="text-primary">Hack</span>
+        ErgoTop<span className="text-primary">Lab</span>
       </span>
     </Link>
   );

@@ -7,6 +7,7 @@ import { JsonLd } from "@/components/seo/json-ld";
 import { getAllProducts, getCategories } from "@/lib/data";
 import { graph, itemListJsonLd } from "@/lib/seo/jsonld";
 import { pageMetadata } from "@/lib/seo/metadata";
+import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
   title: "Reseñas de sillas, escritorios elevables y accesorios ergonómicos",
@@ -25,7 +26,7 @@ export default async function ReviewsIndexPage() {
   return (
     <Container className="py-10">
       <JsonLd
-        data={graph(itemListJsonLd("Reseñas ErgoHack", products.map((p) => ({ name: p.title, path: `/resenas/${p.slug}` }))))}
+        data={graph(itemListJsonLd(`Análisis ${siteConfig.name}`, products.map((p) => ({ name: p.title, path: `/resenas/${p.slug}` }))))}
       />
       <Breadcrumbs items={[{ name: "Reseñas", path: "/resenas" }]} />
       <header className="mt-6 mb-8 max-w-3xl space-y-3">

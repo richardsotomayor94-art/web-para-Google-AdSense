@@ -1,8 +1,9 @@
 import { getAllProducts, getProductBySlug } from "@/lib/data";
 import { ogContentType, ogSize, renderOg } from "@/lib/og/template";
+import { siteConfig } from "@/lib/site";
 import { formatPrice, shortName } from "@/lib/utils";
 
-export const alt = "Reseña de producto ErgoHack";
+export const alt = `Análisis de producto ${siteConfig.name}`;
 export const size = ogSize;
 export const contentType = ogContentType;
 

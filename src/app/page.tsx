@@ -8,6 +8,7 @@ import { HeightCalculator } from "@/components/tools/height-calculator";
 import { Button } from "@/components/ui/button";
 import { getCategories, getComparisonPairs, getFeaturedProducts, getPublishedArticles } from "@/lib/data";
 import { graph, itemListJsonLd } from "@/lib/seo/jsonld";
+import { siteConfig } from "@/lib/site";
 import { shortName } from "@/lib/utils";
 
 const categoryIcons: Record<string, typeof Armchair> = {
@@ -48,14 +49,14 @@ export default async function HomePage() {
         <Container className="grid items-center gap-10 py-14 md:py-20 lg:grid-cols-[1.2fr_1fr]">
           <div className="space-y-6">
             <p className="inline-flex items-center gap-2 rounded-full border bg-background px-3 py-1 text-xs font-medium text-muted-foreground">
-              <span className="size-2 rounded-full bg-success" /> Actualizado en noviembre de 2026
+              <span className="size-2 rounded-full bg-success" /> {siteConfig.tagline}
             </p>
             <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-balance sm:text-5xl">
               Teletrabaja <span className="text-primary">sin dolor</span>. Te decimos qué comprar y cómo ajustarlo.
             </h1>
             <p className="max-w-xl text-lg text-muted-foreground text-pretty">
-              Guías de ergonomía basadas en evidencia y reseñas independientes de sillas, escritorios elevables y
-              accesorios, probados durante semanas por fisioterapeutas e ingenieros.
+              En el laboratorio de {siteConfig.name} probamos durante semanas sillas, escritorios elevables y accesorios,
+              y publicamos guías de ergonomía basadas en evidencia y revisadas por fisioterapeutas.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
               <Button asChild size="lg">

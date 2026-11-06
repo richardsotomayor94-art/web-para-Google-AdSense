@@ -1,4 +1,6 @@
-# ErgoHack
+# ErgoTopLab
+
+> **Laboratorio de Análisis y Ergonomía para Setup y Teletrabajo** · [ergotoplab.com](https://ergotoplab.com)
 
 Plataforma de afiliación + contenido (SEO/GEO) sobre **ergonomía y setup de teletrabajo** para el mercado hispanohablante. Se monetiza con **Google AdSense** (guías informativas) y **Amazon Afiliados** (reseñas y comparativas), con geotargeting Amazon.es / Amazon.com.
 
@@ -72,7 +74,7 @@ src/
 
 **Contenido.** Las guías son Markdown (GFM). El shortcode `{{product:ASIN}}` inserta una ficha de producto con CTA en ese punto del texto.
 
-**JSON-LD.** `Organization` + `WebSite` (global), `BreadcrumbList`, `Product` + `Offer` + `Review` (nota editorial 0–10 con `positiveNotes` / `negativeNotes`), `TechArticle` con autor `Person` y credenciales, `FAQPage` e `ItemList`. No se emite `aggregateRating` con las valoraciones de Amazon: Google exige que las valoraciones procedan del propio sitio.
+**JSON-LD.** `Organization` (ErgoTopLab, `https://ergotoplab.com`, logo PNG en `/logo.png`) + `WebSite` (global), `publisher` completo en artículos y reseñas, `BreadcrumbList`, `Product` + `Offer` + `Review` (nota editorial 0–10 con `positiveNotes` / `negativeNotes`), `TechArticle` con autor `Person` y credenciales, `FAQPage` e `ItemList`. No se emite `aggregateRating` con las valoraciones de Amazon: Google exige que las valoraciones procedan del propio sitio.
 
 ## API v1 (n8n / Make)
 
@@ -83,7 +85,7 @@ Todas requieren la cabecera `x-api-key: $API_SECRET_KEY` (comparación en tiempo
 Crea o actualiza por ASIN. Solo se modifican los campos enviados, así que la actualización diaria de precios puede mandar únicamente el precio. Acepta `{ products: [...] }`, un array o un único objeto (máx. 500).
 
 ```bash
-curl -X POST https://www.ergohack.es/api/v1/products/sync \
+curl -X POST https://ergotoplab.com/api/v1/products/sync \
   -H "x-api-key: $API_SECRET_KEY" -H "content-type: application/json" \
   -d '{
     "products": [
@@ -128,7 +130,7 @@ Crea o actualiza por `slug` (se genera a partir del título si falta). Asocia pr
 
 ## Despliegue en Vercel
 
-1. Importa el repo y configura las variables de `.env.example`, incluida `NEXT_PUBLIC_SITE_URL` con el dominio final.
+1. Importa el repo y configura las variables de `.env.example` (`NEXT_PUBLIC_SITE_URL=https://ergotoplab.com`, `NEXT_PUBLIC_SITE_NAME="ErgoTopLab"`). Añade `ergotoplab.com` como dominio principal en Vercel y redirige `www.ergotoplab.com` → `ergotoplab.com` para que coincida con la URL canónica. En los entornos Preview puedes sobrescribir `NEXT_PUBLIC_SITE_URL`.
 2. El build se conecta a la base de datos para prerenderizar, así que `DATABASE_URL` debe estar disponible también en build.
 3. Comprueba `/ads.txt`, `/llms.txt`, `/sitemap.xml` y envía el sitemap a Search Console.
 

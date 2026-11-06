@@ -394,8 +394,8 @@ const fisio = {
   name: "Laura Méndez",
   slug: "laura-mendez",
   role: "Fisioterapeuta colegiada especializada en ergonomía laboral",
-  bio: "Más de 10 años tratando lesiones musculoesqueléticas de trabajadores de oficina. Revisa todas las guías de salud de ErgoHack.",
-  url: "https://www.ergohack.es/sobre-nosotros#laura-mendez",
+  bio: "Más de 10 años tratando lesiones musculoesqueléticas de trabajadores de oficina. Revisa todas las guías de salud de ErgoTopLab.",
+  url: "https://ergotoplab.com/sobre-nosotros#laura-mendez",
   credentials: ["Grado en Fisioterapia", "Máster en Ergonomía y Psicosociología Aplicada"],
   sameAs: [],
 };

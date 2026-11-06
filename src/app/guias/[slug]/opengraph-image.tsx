@@ -1,8 +1,8 @@
 import { getArticleBySlug, getPublishedArticles } from "@/lib/data";
 import { ogContentType, ogSize, renderOg } from "@/lib/og/template";
-import { defaultAuthor } from "@/lib/site";
+import { defaultAuthor, siteConfig } from "@/lib/site";
 
-export const alt = "Guía de ergonomía ErgoHack";
+export const alt = `Guía de ergonomía ${siteConfig.name}`;
 export const size = ogSize;
 export const contentType = ogContentType;
 

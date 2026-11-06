@@ -6,7 +6,7 @@ import * as schema from "./schema";
 export type Database = PostgresJsDatabase<typeof schema>;
 
 declare global {
-  var __ergohackDb: Database | undefined;
+  var __ergotoplabDb: Database | undefined;
 }
 
 /** `true` cuando hay una base de datos configurada. Sin ella la web usa datos de demostración. */
@@ -22,11 +22,11 @@ export function getDb(): Database {
   if (!url) {
     throw new Error("DATABASE_URL no está configurada");
   }
-  if (!globalThis.__ergohackDb) {
+  if (!globalThis.__ergotoplabDb) {
     const client = postgres(url, { prepare: false, max: 5, idle_timeout: 20 });
-    globalThis.__ergohackDb = drizzle(client, { schema });
+    globalThis.__ergotoplabDb = drizzle(client, { schema });
   }
-  return globalThis.__ergohackDb;
+  return globalThis.__ergotoplabDb;
 }
 
 export { schema };

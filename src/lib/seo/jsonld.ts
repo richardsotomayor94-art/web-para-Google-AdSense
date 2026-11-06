@@ -12,15 +12,37 @@ type Thing = Record<string, unknown>;
 const ORG_ID = `${siteConfig.url}/#organization`;
 const WEBSITE_ID = `${siteConfig.url}/#website`;
 
-export function organizationJsonLd(): Thing {
+const logo = (): Thing => ({
+  "@type": "ImageObject",
+  "@id": `${siteConfig.url}/#logo`,
+  url: absoluteUrl("/logo.png"),
+  contentUrl: absoluteUrl("/logo.png"),
+  width: 512,
+  height: 512,
+  caption: siteConfig.name,
+});
+
+/** Editor (publisher) completo e independiente: válido aunque el nodo Organization esté en otro bloque. */
+export function publisherJsonLd(): Thing {
   return {
     "@type": "Organization",
     "@id": ORG_ID,
     name: siteConfig.name,
     url: siteConfig.url,
-    logo: absoluteUrl("/icon.svg"),
-    email: siteConfig.email,
+    logo: logo(),
+  };
+}
+
+export function organizationJsonLd(): Thing {
+  return {
+    ...publisherJsonLd(),
+    alternateName: siteConfig.alternateName,
+    slogan: siteConfig.tagline,
     description: siteConfig.description,
+    email: siteConfig.email,
+    image: { "@id": `${siteConfig.url}/#logo` },
+    knowsAbout: ["Ergonomía", "Teletrabajo", "Sillas ergonómicas", "Escritorios elevables", "Salud postural"],
+    contactPoint: { "@type": "ContactPoint", contactType: "editorial", email: siteConfig.email, availableLanguage: ["es"] },
   };
 }
 
@@ -31,8 +53,9 @@ export function websiteJsonLd(): Thing {
     name: siteConfig.name,
     url: siteConfig.url,
     inLanguage: siteConfig.language,
+    alternateName: siteConfig.alternateName,
     description: siteConfig.description,
-    publisher: { "@id": ORG_ID },
+    publisher: publisherJsonLd(),
   };
 }
 
@@ -105,7 +128,7 @@ export function productReviewJsonLd(product: Product, path: string): Thing {
         datePublished: product.createdAt,
         dateModified: product.updatedAt,
         author: personJsonLd(defaultAuthor),
-        publisher: { "@id": ORG_ID },
+        publisher: publisherJsonLd(),
         reviewBody: product.verdict ?? undefined,
         itemReviewed: { "@id": `${absoluteUrl(path)}#product` },
         reviewRating: {
@@ -145,7 +168,7 @@ export function articleJsonLd(article: Article, path: string, products: Product[
     datePublished: article.publishedAt ?? article.createdAt,
     dateModified: article.updatedAt,
     author: personJsonLd(article.author),
-    publisher: { "@id": ORG_ID },
+    publisher: publisherJsonLd(),
     isPartOf: { "@id": WEBSITE_ID },
     ...(products.length && {
       mentions: products.map((p) => ({ "@type": "Product", name: p.title, url: absoluteUrl(`/resenas/${p.slug}`) })),

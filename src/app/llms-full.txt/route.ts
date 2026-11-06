@@ -41,7 +41,7 @@ async function buildFull(): Promise<string> {
       `## Reseña: ${p.title}`,
       "",
       `URL: ${absoluteUrl(`/resenas/${p.slug}`)}`,
-      `Categoría: ${p.categoryName ?? "—"} · Nota ErgoHack: ${p.editorialRating ?? "—"}/10 · Precio orientativo: ${formatPrice(p.priceCurrent, p.currency) ?? "—"}`,
+      `Categoría: ${p.categoryName ?? "—"} · Nota ${siteConfig.name}: ${p.editorialRating ?? "—"}/10 · Precio orientativo: ${formatPrice(p.priceCurrent, p.currency) ?? "—"}`,
       "",
       p.verdict ? `Veredicto: ${p.verdict}` : "",
       "",

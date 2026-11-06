@@ -19,19 +19,30 @@ const ADSENSE_CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: `${siteConfig.name} — ${siteConfig.tagline}`,
+    default: `${siteConfig.name} | ${siteConfig.tagline}`,
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
   applicationName: siteConfig.name,
+  authors: [{ name: siteConfig.name, url: siteConfig.url }],
+  creator: siteConfig.name,
+  publisher: siteConfig.name,
   alternates: { canonical: "/", types: { "text/plain": "/llms.txt" } },
   openGraph: {
     type: "website",
     siteName: siteConfig.name,
     locale: siteConfig.locale,
     url: "/",
+    title: `${siteConfig.name} | ${siteConfig.tagline}`,
+    description: siteConfig.description,
   },
-  twitter: { card: "summary_large_image", site: siteConfig.twitter },
+  twitter: {
+    card: "summary_large_image",
+    site: siteConfig.twitter,
+    creator: siteConfig.twitter,
+    title: `${siteConfig.name} | ${siteConfig.tagline}`,
+    description: siteConfig.description,
+  },
   robots: { index: true, follow: true, googleBot: { "max-image-preview": "large", "max-snippet": -1 } },
   ...(ADSENSE_CLIENT && { other: { "google-adsense-account": ADSENSE_CLIENT } }),
 };

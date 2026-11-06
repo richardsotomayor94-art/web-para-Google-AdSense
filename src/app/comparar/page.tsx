@@ -7,6 +7,7 @@ import { JsonLd } from "@/components/seo/json-ld";
 import { getCategories, getComparisonPairs } from "@/lib/data";
 import { graph, itemListJsonLd } from "@/lib/seo/jsonld";
 import { pageMetadata } from "@/lib/seo/metadata";
+import { siteConfig } from "@/lib/site";
 import { shortName } from "@/lib/utils";
 
 export const metadata: Metadata = pageMetadata({
@@ -27,7 +28,7 @@ export default async function ComparisonsIndexPage() {
       <JsonLd
         data={graph(
           itemListJsonLd(
-            "Comparativas ErgoHack",
+            `Comparativas ${siteConfig.name}`,
             pairs.map((p) => ({ name: `${shortName(p.a.title)} vs ${shortName(p.b.title)}`, path: `/comparar/${p.slug}` })),
           ),
         )}

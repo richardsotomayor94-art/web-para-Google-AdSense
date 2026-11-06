@@ -4,7 +4,7 @@ import { pageMetadata } from "@/lib/seo/metadata";
 import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Quiénes somos y cómo probamos los productos",
+  title: `Sobre ${siteConfig.name}: el laboratorio y cómo probamos`,
   description: `Conoce al equipo de ${siteConfig.name}, nuestra metodología de pruebas y cómo nos financiamos.`,
   path: "/sobre-nosotros",
 });
@@ -12,9 +12,9 @@ export const metadata: Metadata = pageMetadata({
 export default function AboutPage() {
   return (
     <StaticPage
-      title="Quiénes somos"
+      title={`Sobre ${siteConfig.name}`}
       path="/sobre-nosotros"
-      intro={`${siteConfig.name} nace de una pregunta sencilla: ¿qué necesito de verdad para trabajar desde casa sin acabar con dolor de espalda?`}
+      intro={`${siteConfig.name} es un ${siteConfig.tagline.charAt(0).toLowerCase()}${siteConfig.tagline.slice(1)}. Nacimos de una pregunta sencilla: ¿qué necesito de verdad para trabajar desde casa sin acabar con dolor de espalda?`}
     >
       <h2 id="equipo">El equipo</h2>
       <p>

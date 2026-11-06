@@ -1,24 +1,28 @@
 import type { ArticleAuthor } from "./types";
 
+/** Dominio oficial de producción. Se puede sobrescribir con NEXT_PUBLIC_SITE_URL (p. ej. en previews). */
+const PRODUCTION_URL = "https://ergotoplab.com";
+
 export const siteConfig = {
-  name: "ErgoHack",
-  shortName: "ErgoHack",
-  tagline: "Ergonomía y setup de teletrabajo, probados de verdad",
+  name: process.env.NEXT_PUBLIC_SITE_NAME || "ErgoTopLab",
+  alternateName: "ErgoTop Lab",
+  tagline: "Laboratorio de Análisis y Ergonomía para Setup y Teletrabajo",
   description:
-    "Guías de ergonomía basadas en evidencia, reseñas independientes y comparativas de sillas, escritorios elevables, monitores y accesorios para teletrabajar sin dolor.",
-  url: (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/$/, ""),
+    "ErgoTopLab es un laboratorio independiente de análisis y ergonomía: pruebas reales, guías basadas en evidencia y comparativas de sillas, escritorios elevables, monitores y accesorios para tu setup de teletrabajo.",
+  url: (process.env.NEXT_PUBLIC_SITE_URL || PRODUCTION_URL).replace(/\/$/, ""),
+  domain: "ergotoplab.com",
   locale: "es_ES",
   language: "es",
-  twitter: "@ergohack",
-  email: "hola@ergohack.es",
+  twitter: "@ergotoplab",
+  email: "hola@ergotoplab.com",
 } as const;
 
 /** Autor por defecto para las piezas sin autor explícito (E-E-A-T). */
 export const defaultAuthor: ArticleAuthor = {
-  name: "Equipo editorial ErgoHack",
+  name: `Laboratorio ${siteConfig.name}`,
   slug: "equipo-editorial",
-  role: "Redacción y laboratorio de pruebas",
-  bio: "Fisioterapeutas, ingenieros y teletrabajadores que prueban cada producto durante semanas antes de recomendarlo.",
+  role: "Equipo de análisis y pruebas ergonómicas",
+  bio: "Fisioterapeutas, ingenieros y teletrabajadores que prueban cada producto durante semanas en el laboratorio antes de recomendarlo.",
   url: `${siteConfig.url}/sobre-nosotros`,
   sameAs: [],
 };
@@ -27,7 +31,7 @@ export const mainNav = [
   { href: "/guias", label: "Guías" },
   { href: "/resenas", label: "Reseñas" },
   { href: "/comparar", label: "Comparativas" },
-  { href: "/sobre-nosotros", label: "Quiénes somos" },
+  { href: "/sobre-nosotros", label: "El laboratorio" },
 ] as const;
 
 export function absoluteUrl(path = "/"): string {

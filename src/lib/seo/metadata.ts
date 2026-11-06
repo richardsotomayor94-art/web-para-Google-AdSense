@@ -43,6 +43,13 @@ export function pageMetadata({
         authors,
       }),
     },
-    twitter: { card: "summary_large_image", title, description, ...(images && { images }) },
+    twitter: {
+      card: "summary_large_image",
+      site: siteConfig.twitter,
+      creator: siteConfig.twitter,
+      title,
+      description,
+      ...(images && { images }),
+    },
   };
 }
