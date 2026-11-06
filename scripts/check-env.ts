@@ -68,8 +68,15 @@ const VARS: Var[] = [
     name: "NEXT_PUBLIC_SITE_URL",
     required: true,
     where: "Vercel",
-    how: "https://ergotoplab.com",
+    how: "Fase de pruebas: https://ergotoplab.vercel.app (o el dominio que asigne Vercel). Con dominio propio: https://ergotoplab.com",
     invalid: (v) => (/^https:\/\/[^/]+$/.test(v) ? null : "usa https:// y sin barra final"),
+  },
+  {
+    name: "NEXT_PUBLIC_SITE_NOINDEX",
+    required: false,
+    where: "Vercel",
+    how: '"true" para que Google no indexe el dominio temporal .vercel.app durante las pruebas.',
+    invalid: (v) => (v === "true" || v === "false" ? null : 'usa "true" o "false"'),
   },
   { name: "NEXT_PUBLIC_SITE_NAME", required: false, where: "Vercel", how: '"ErgoTopLab" (valor por defecto).' },
   {
@@ -137,7 +144,7 @@ console.log(
         "Dónde configurarlas:",
         "  • Vercel  → Project → Settings → Environment Variables (Production y Preview). Redeploy tras cambiarlas.",
         "  • Neon    → solo de ahí se copia DATABASE_URL; después crea las tablas con `npm run db:migrate`.",
-        "  • n8n     → nodo HTTP Request: POST https://ergotoplab.com/api/v1/products/sync, cabecera x-api-key = API_SECRET_KEY.",
+        `  • n8n     → nodo HTTP Request: POST ${(process.env.NEXT_PUBLIC_SITE_URL || "https://ergotoplab.vercel.app").replace(/\/$/, "")}/api/v1/products/sync, cabecera x-api-key = API_SECRET_KEY.`,
       ].join("\n"),
     ),
 );

@@ -43,7 +43,9 @@ export const metadata: Metadata = {
     title: `${siteConfig.name} | ${siteConfig.tagline}`,
     description: siteConfig.description,
   },
-  robots: { index: true, follow: true, googleBot: { "max-image-preview": "large", "max-snippet": -1 } },
+  robots: siteConfig.noIndex
+    ? { index: false, follow: false }
+    : { index: true, follow: true, googleBot: { "max-image-preview": "large", "max-snippet": -1 } },
   ...(ADSENSE_CLIENT && { other: { "google-adsense-account": ADSENSE_CLIENT } }),
 };
 

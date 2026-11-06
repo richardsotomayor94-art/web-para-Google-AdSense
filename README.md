@@ -200,6 +200,21 @@ Crea o actualiza por `slug` (se genera a partir del título si falta). Asocia pr
 
 ## Despliegue en Vercel
 
+### Fase de pruebas: dominio gratuito `.vercel.app`
+
+Mientras no conectes `ergotoplab.com`, el proyecto vive en el plan gratuito de Vercel (Hobby) con su dominio `*.vercel.app`:
+
+1. Importa el repo en Vercel. El dominio de producción será `https://<nombre-del-proyecto>.vercel.app` (Project → Settings → Domains), por ejemplo `https://ergotoplab.vercel.app` si el nombre está libre.
+2. Pon ese dominio en `NEXT_PUBLIC_SITE_URL`. Si la dejas vacía, la web usa sola la variable de sistema `NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL` de Vercel.
+3. La marca (ErgoTopLab), el JSON-LD y el esquema de base de datos no cambian: solo cambia la URL canónica de las metaetiquetas, el sitemap, `robots.txt`, `llms.txt` y las imágenes OG.
+4. Opcional: `NEXT_PUBLIC_SITE_NOINDEX=true` bloquea la indexación (`noindex` + `Disallow: /`) para que Google no indexe el dominio temporal. Quítala al pasar al dominio definitivo.
+
+**Al conectar `ergotoplab.com`:** añádelo en Settings → Domains, cambia `NEXT_PUBLIC_SITE_URL=https://ergotoplab.com` (o bórrala: la variable de sistema pasará a ser `ergotoplab.com`), quita `NEXT_PUBLIC_SITE_NOINDEX` y vuelve a desplegar. Activa también la redirección 308 de `*.vercel.app` al dominio propio.
+
+> AdSense exige un dominio propio: no aprueba sitios en subdominios de `vercel.app`. Solicítalo cuando `ergotoplab.com` esté activo.
+
+### Producción
+
 1. Importa el repo y configura las variables de `.env.example` (`NEXT_PUBLIC_SITE_URL=https://ergotoplab.com`, `NEXT_PUBLIC_SITE_NAME="ErgoTopLab"`). Añade `ergotoplab.com` como dominio principal en Vercel y redirige `www.ergotoplab.com` → `ergotoplab.com` para que coincida con la URL canónica. En los entornos Preview puedes sobrescribir `NEXT_PUBLIC_SITE_URL`.
 2. Conecta Neon: añade `DATABASE_URL` a mano o instala la integración de Neon desde el Marketplace de Vercel, que crea la variable sola (comprueba que incluya `-pooler` y `sslmode=require`). El build se conecta a la base de datos para prerenderizar, así que la variable debe estar disponible también en build.
 3. Antes del primer despliegue, crea las tablas en Neon desde tu ordenador con `npm run db:migrate`, usando la URL de producción en `.env.local`. Repite el comando cada vez que generes una migración nueva.
