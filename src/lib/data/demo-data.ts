@@ -2,7 +2,7 @@
  * Datos de DEMOSTRACIÓN.
  *
  * Se usan automáticamente cuando `DATABASE_URL` no está configurada, para que la
- * web se pueda desarrollar, previsualizar y compilar sin Supabase. Las marcas y
+ * web se pueda desarrollar, previsualizar y compilar sin base de datos. Las marcas y
  * los ASIN (prefijo `B0DEMO`) son ficticios: sustitúyelos por productos reales
  * a través de `POST /api/v1/products/sync` o con `npm run db:seed`.
  */

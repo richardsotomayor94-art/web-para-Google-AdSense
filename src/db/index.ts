@@ -1,9 +1,10 @@
 import "server-only";
-import { drizzle, type PostgresJsDatabase } from "drizzle-orm/postgres-js";
-import postgres from "postgres";
+import { attachDatabasePool } from "@vercel/functions";
+import { drizzle, type NeonDatabase } from "drizzle-orm/neon-serverless";
+import { createNeonPool } from "./neon";
 import * as schema from "./schema";
 
-export type Database = PostgresJsDatabase<typeof schema>;
+export type Database = NeonDatabase<typeof schema>;
 
 declare global {
   var __ergotoplabDb: Database | undefined;
@@ -13,9 +14,11 @@ declare global {
 export const isDatabaseConfigured = Boolean(process.env.DATABASE_URL);
 
 /**
- * Cliente Drizzle perezoso y reutilizado entre invocaciones (evita agotar
- * conexiones en serverless). `prepare: false` es obligatorio con el
- * "Transaction pooler" de Supabase (PgBouncer).
+ * Cliente Drizzle sobre Neon Serverless (Pool por WebSocket, admite transacciones).
+ *
+ * Se crea una sola vez por instancia. `attachDatabasePool` (Vercel Fluid
+ * Compute) mantiene viva la función el tiempo justo para cerrar las conexiones
+ * inactivas antes de suspenderla; fuera de Vercel no hace nada.
  */
 export function getDb(): Database {
   const url = process.env.DATABASE_URL;
@@ -23,8 +26,9 @@ export function getDb(): Database {
     throw new Error("DATABASE_URL no está configurada");
   }
   if (!globalThis.__ergotoplabDb) {
-    const client = postgres(url, { prepare: false, max: 5, idle_timeout: 20 });
-    globalThis.__ergotoplabDb = drizzle(client, { schema });
+    const pool = createNeonPool(url);
+    attachDatabasePool(pool);
+    globalThis.__ergotoplabDb = drizzle({ client: pool, schema });
   }
   return globalThis.__ergotoplabDb;
 }

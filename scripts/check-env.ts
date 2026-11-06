@@ -8,10 +8,11 @@
  */
 import { randomBytes } from "node:crypto";
 import { config } from "dotenv";
+import { describeConnectionString } from "../src/db/neon";
 
 config({ path: [".env.local", ".env"], quiet: true });
 
-type Where = "Vercel" | "Vercel (valor de Supabase)" | "Vercel (valor de Google)";
+type Where = "Vercel" | "Vercel (valor de Neon)" | "Vercel (valor de Google)";
 interface Var {
   name: string;
   required: boolean;
@@ -52,11 +53,16 @@ const VARS: Var[] = [
   {
     name: "DATABASE_URL",
     required: true,
-    where: "Vercel (valor de Supabase)",
-    how: 'Supabase → Project Settings → Database → Connection string → "Transaction pooler" (puerto 6543).',
+    where: "Vercel (valor de Neon)",
+    how: 'Neon Console → Connect → cadena con "Connection pooling" activado (host -pooler) y ?sslmode=require.',
     secret: true,
-    invalid: (v) =>
-      !/^postgres(ql)?:\/\//.test(v) ? "debe empezar por postgresql://" : v.includes("TU_PASSWORD") ? "contiene el valor de ejemplo" : null,
+    invalid: (v) => {
+      if (!/^postgres(ql)?:\/\//.test(v)) return "debe empezar por postgresql://";
+      if (v.includes("TU_PASSWORD")) return "contiene el valor de ejemplo";
+      const info = describeConnectionString(v);
+      if (info.isNeon && !info.sslRequired) return "falta ?sslmode=require (SSL obligatorio en Neon)";
+      return null;
+    },
   },
   {
     name: "NEXT_PUBLIC_SITE_URL",
@@ -66,7 +72,13 @@ const VARS: Var[] = [
     invalid: (v) => (/^https:\/\/[^/]+$/.test(v) ? null : "usa https:// y sin barra final"),
   },
   { name: "NEXT_PUBLIC_SITE_NAME", required: false, where: "Vercel", how: '"ErgoTopLab" (valor por defecto).' },
-  { name: "DATABASE_MIGRATION_URL", required: false, where: "Vercel (valor de Supabase)", how: "Conexión directa (puerto 5432) para migraciones.", secret: true },
+  {
+    name: "DATABASE_MIGRATION_URL",
+    required: false,
+    where: "Vercel (valor de Neon)",
+    how: 'Para `npm run db:migrate`: cadena con "Connection pooling" desactivado (host sin -pooler).',
+    secret: true,
+  },
   { name: "NEXT_PUBLIC_GA_ID", required: false, where: "Vercel (valor de Google)", how: "GA4 → Flujos de datos → ID de medición (G-…)." },
   { name: "NEXT_PUBLIC_GTM_ID", required: false, where: "Vercel (valor de Google)", how: "Google Tag Manager (GTM-…), si lo usas." },
   {
@@ -124,7 +136,7 @@ console.log(
       [
         "Dónde configurarlas:",
         "  • Vercel  → Project → Settings → Environment Variables (Production y Preview). Redeploy tras cambiarlas.",
-        "  • Supabase → solo de ahí se copia DATABASE_URL; después aplica el esquema con `npm run db:migrate`.",
+        "  • Neon    → solo de ahí se copia DATABASE_URL; después crea las tablas con `npm run db:migrate`.",
         "  • n8n     → nodo HTTP Request: POST https://ergotoplab.com/api/v1/products/sync, cabecera x-api-key = API_SECRET_KEY.",
       ].join("\n"),
     ),

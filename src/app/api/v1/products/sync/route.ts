@@ -15,7 +15,7 @@ import { CACHE_TAGS } from "@/lib/data/tags";
  *           o un array, o un único objeto. En lugar de `asin` se puede enviar
  *           `url` con cualquier enlace de producto de Amazon.
  *
- * Guarda o actualiza por ASIN en Supabase (Postgres vía Drizzle) e inyecta el
+ * Guarda o actualiza por ASIN en Neon PostgreSQL (Drizzle) e inyecta el
  * tag de afiliado en las URLs recibidas.
  */
 export async function POST(request: Request) {

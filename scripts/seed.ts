@@ -4,8 +4,8 @@
  * Es idempotente: actualiza por slug/ASIN si ya existen.
  */
 import { config } from "dotenv";
-import { drizzle } from "drizzle-orm/postgres-js";
-import postgres from "postgres";
+import { drizzle } from "drizzle-orm/neon-serverless";
+import { createNeonPool } from "../src/db/neon";
 import * as schema from "../src/db/schema";
 import { demoArticles, demoCategories, demoProducts } from "../src/lib/data/demo-data";
 
@@ -14,8 +14,8 @@ config({ path: [".env.local", ".env"], quiet: true });
 async function main() {
   const url = process.env.DATABASE_MIGRATION_URL ?? process.env.DATABASE_URL;
   if (!url) throw new Error("Define DATABASE_URL en .env.local");
-  const client = postgres(url, { prepare: false, max: 1 });
-  const db = drizzle(client, { schema });
+  const pool = createNeonPool(url, { max: 1 });
+  const db = drizzle({ client: pool, schema });
 
   const categoryIds = new Map<string, string>();
   for (const c of demoCategories) {
@@ -86,7 +86,7 @@ async function main() {
   }
 
   console.log(`✓ Seed: ${demoCategories.length} categorías, ${demoProducts.length} productos, ${demoArticles.length} guías`);
-  await client.end();
+  await pool.end();
 }
 
 main().catch((error) => {

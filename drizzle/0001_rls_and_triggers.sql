@@ -1,6 +1,6 @@
 -- ──────────────────────────────────────────────────────────────
 -- updated_at automático también para escrituras fuera del ORM
--- (SQL Editor de Supabase, n8n con conexión directa, etc.)
+-- (SQL Editor de Neon, n8n con conexión directa, etc.)
 -- ──────────────────────────────────────────────────────────────
 CREATE OR REPLACE FUNCTION set_updated_at() RETURNS trigger AS $$
 BEGIN
@@ -17,10 +17,11 @@ CREATE TRIGGER articles_set_updated_at BEFORE UPDATE ON "articles" FOR EACH ROW 
 --> statement-breakpoint
 
 -- ──────────────────────────────────────────────────────────────
--- Row Level Security (Supabase)
--- La app accede con la conexión Postgres del servidor (rol con BYPASSRLS).
--- Activamos RLS para que la API REST pública de Supabase (anon key) solo
--- pueda LEER contenido publicado y nunca escribir ni ver analítica/logs.
+-- Row Level Security
+-- La app se conecta con el rol propietario de las tablas, que no está sujeto
+-- a RLS, así que no le afecta. Si en el futuro activas la Data API de Neon
+-- (o creas roles de solo lectura), esos roles solo podrán LEER contenido
+-- publicado y nunca escribir ni ver analítica/logs.
 -- ──────────────────────────────────────────────────────────────
 ALTER TABLE "categories" ENABLE ROW LEVEL SECURITY;
 --> statement-breakpoint
