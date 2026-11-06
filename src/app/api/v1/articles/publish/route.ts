@@ -1,9 +1,9 @@
 import { revalidateTag } from "next/cache";
 import { isDatabaseConfigured } from "@/db";
 import { publishArticle } from "@/lib/api/articles-publish";
-import { isAuthorized } from "@/lib/api/auth";
+import { checkApiKey } from "@/lib/api/auth";
 import { logAutomation } from "@/lib/api/automation-log";
-import { badRequest, dbNotConfigured, json, readJson, unauthorized, validationError } from "@/lib/api/responses";
+import { authError, badRequest, dbNotConfigured, json, readJson, validationError } from "@/lib/api/responses";
 import { articlePublishSchema } from "@/lib/api/schemas";
 import { CACHE_TAGS } from "@/lib/data/tags";
 import { absoluteUrl } from "@/lib/site";
@@ -15,7 +15,8 @@ import { absoluteUrl } from "@/lib/site";
  * Crea o actualiza (por slug) y asocia productos automáticamente.
  */
 export async function POST(request: Request) {
-  if (!isAuthorized(request)) return unauthorized();
+  const denied = authError(checkApiKey(request));
+  if (denied) return denied;
   if (!isDatabaseConfigured) return dbNotConfigured();
 
   const body = await readJson(request);

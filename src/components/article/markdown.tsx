@@ -1,7 +1,8 @@
 import Link from "next/link";
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { AFFILIATE_REL } from "@/lib/amazon";
+import { AmazonLink } from "@/components/product/amazon-link";
+import { isAmazonUrl } from "@/lib/amazon";
 import { slugify } from "@/lib/utils";
 
 function textOf(node: React.ReactNode): string {
@@ -18,9 +19,10 @@ const components: Components = {
   h3: ({ children }) => <h3 id={slugify(textOf(children))}>{children}</h3>,
   a: ({ href = "", children }) => {
     if (href.startsWith("/") || href.startsWith("#")) return <Link href={href}>{children}</Link>;
-    const isAmazon = /(^https?:\/\/)?([a-z0-9-]+\.)*amazon\.(es|com)|amzn\.to/.test(href);
+    // Cualquier enlace a Amazon del Markdown recibe el tag y los atributos de afiliado
+    if (isAmazonUrl(href)) return <AmazonLink href={href}>{children}</AmazonLink>;
     return (
-      <a href={href} target="_blank" rel={isAmazon ? AFFILIATE_REL : "noopener noreferrer"}>
+      <a href={href} target="_blank" rel="noopener noreferrer">
         {children}
       </a>
     );

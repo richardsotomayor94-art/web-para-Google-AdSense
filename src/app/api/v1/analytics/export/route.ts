@@ -1,7 +1,7 @@
 import { and, count, desc, eq, gte, lte, sql } from "drizzle-orm";
 import { getDb, isDatabaseConfigured, schema } from "@/db";
-import { isAuthorized } from "@/lib/api/auth";
-import { badRequest, dbNotConfigured, json, unauthorized } from "@/lib/api/responses";
+import { checkApiKey } from "@/lib/api/auth";
+import { authError, badRequest, dbNotConfigured, json } from "@/lib/api/responses";
 
 const DAY = 86_400_000;
 
@@ -12,7 +12,8 @@ const DAY = 86_400_000;
  * Con `format=csv` devuelve los clics en bruto.
  */
 export async function GET(request: Request) {
-  if (!isAuthorized(request)) return unauthorized();
+  const denied = authError(checkApiKey(request));
+  if (denied) return denied;
   if (!isDatabaseConfigured) return dbNotConfigured();
 
   const params = new URL(request.url).searchParams;

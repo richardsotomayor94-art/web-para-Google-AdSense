@@ -15,6 +15,49 @@ Plataforma de afiliación + contenido (SEO/GEO) sobre **ergonomía y setup de te
 | Analítica | GA4 / GTM con `@next/third-parties/google`, tabla propia `click_analytics` |
 | Tema | `next-themes` (claro / oscuro / sistema) |
 
+## Conexiones externas (configuración mínima)
+
+Sin SDKs externos: Amazon funciona con enlaces de afiliado (sin PA-API), n8n habla con la API por HTTP y Supabase se usa como PostgreSQL vía `DATABASE_URL`.
+
+| Variable | Dónde | Para qué |
+| --- | --- | --- |
+| `AMAZON_AFFILIATE_TAG_ES` | Vercel | Tag de Amazon.es (por defecto `ergotoplab-21`) |
+| `AMAZON_AFFILIATE_TAG_US` | Vercel | Tag de Amazon.com (por defecto `ergotoplabus-20`) |
+| `API_SECRET_KEY` | Vercel + n8n | Cabecera `x-api-key` de los webhooks (mín. 24 caracteres; el valor de ejemplo se rechaza con `503`) |
+| `DATABASE_URL` | Vercel (valor copiado de Supabase) | Conexión Postgres "Transaction pooler" |
+| `NEXT_PUBLIC_SITE_URL` | Vercel | `https://ergotoplab.com` |
+
+```bash
+npm run env:check            # lista el estado de cada variable (también se ejecuta antes de cada build)
+npm run env:check -- --strict  # sale con error si falta alguna obligatoria
+```
+
+### Helper de enlaces de Amazon (`src/lib/amazon.ts`)
+
+```ts
+import { toAffiliateLink, toAffiliateUrl } from "@/lib/amazon";
+
+toAffiliateLink("B0XXXXXXXX");
+// { href: "https://www.amazon.es/dp/B0XXXXXXXX?tag=ergotoplab-21", rel: "sponsored nofollow noopener", target: "_blank", asin, marketplace }
+
+toAffiliateUrl("https://www.amazon.com/Silla/dp/B0XXXXXXXX/ref=sr_1_3?th=1");
+// "https://www.amazon.com/dp/B0XXXXXXXX?tag=ergotoplabus-20"   (limpia el tracking y pone tu tag)
+```
+
+- Acepta ASIN o cualquier URL de producto (`/dp/`, `/gp/product/`, `/gp/aw/d/`…), sustituye tags ajenos y conserva las URLs de búsqueda poniéndoles tu tag. Los enlaces cortos `amzn.to` se dejan tal cual.
+- `<AmazonLink href="B0XXXXXXXX">` renderiza el `<a>` completo, y cualquier enlace a Amazon escrito en el Markdown de las guías se convierte automáticamente.
+- Los enlaces de producto se recalculan en cada render, así que al cambiar un tag en Vercel (y redesplegar) se actualizan todos.
+
+### n8n → `POST /api/v1/products/sync`
+
+Nodo **HTTP Request**: método `POST`, URL `https://ergotoplab.com/api/v1/products/sync`, cabecera `x-api-key` = `API_SECRET_KEY`, body JSON. Basta con la URL de Amazon en lugar del ASIN:
+
+```json
+{ "url": "https://www.amazon.es/dp/B0XXXXXXXX", "title": "Silla X — …", "price_current": 199.9, "price_original": 249.9 }
+```
+
+Respuestas: `200` guardado o actualizado · `401` clave incorrecta o ausente · `422` datos inválidos · `503` falta `API_SECRET_KEY` o `DATABASE_URL`.
+
 ## Puesta en marcha
 
 ```bash
@@ -64,7 +107,7 @@ src/
 └─ proxy.ts                    Cookie de país para el geotargeting
 ```
 
-**Caché.** Todas las lecturas (`src/lib/data`) usan `"use cache"` + `cacheTag`. Las páginas se prerenderizan en build y los webhooks invalidan con `revalidateTag` (`products`, `articles`, `categories`), así que precios y artículos nuevos aparecen sin redeploy. Las rutas nuevas que no existían en build se generan en la primera visita (los bots reciben el HTML completo y códigos 404/308 reales).
+**Caché.** Todas las lecturas (`src/lib/data`) usan `"use cache"` + `cacheTag`. Las páginas se prerenderizan en build y los webhooks invalidan con `revalidateTag` (`products`, `articles`, `categories`), así que precios y artículos nuevos aparecen sin redeploy. Las rutas nuevas que no existían en build se generan en la primera visita y quedan cacheadas. Una URL inexistente responde la primera vez `200` con `noindex` y, desde la segunda, `404` real (lo mismo para las redirecciones `308` de comparativas invertidas).
 
 **Geotargeting.** `proxy.ts` guarda el país (`x-vercel-ip-country`) en la cookie `eh_country`. `AffiliateButton` renderiza Amazon.es en el HTML estático y, tras hidratar, cambia a Amazon.com fuera de ES/PT/AD/GI. Así las páginas siguen siendo estáticas.
 

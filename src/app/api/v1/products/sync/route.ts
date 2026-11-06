@@ -1,27 +1,33 @@
 import { revalidateTag } from "next/cache";
 import { isDatabaseConfigured } from "@/db";
-import { isAuthorized } from "@/lib/api/auth";
+import { checkApiKey } from "@/lib/api/auth";
 import { logAutomation } from "@/lib/api/automation-log";
 import { syncProducts } from "@/lib/api/products-sync";
-import { badRequest, dbNotConfigured, json, readJson, unauthorized, validationError } from "@/lib/api/responses";
+import { authError, badRequest, dbNotConfigured, json, readJson, validationError } from "@/lib/api/responses";
 import { productsSyncSchema } from "@/lib/api/schemas";
 import { CACHE_TAGS } from "@/lib/data/tags";
 
 /**
- * POST /api/v1/products/sync
- * Cabecera: x-api-key: <API_SECRET_KEY>
+ * POST /api/v1/products/sync — entrada de productos desde n8n / Make.
+ *
+ * Cabecera: x-api-key: <API_SECRET_KEY>   → si no coincide: 401 Unauthorized
  * Cuerpo:   { "products": [{ "asin": "B0...", "title": "...", "price_current": 199.9, ... }] }
- * También acepta un array directamente o un único objeto producto.
+ *           o un array, o un único objeto. En lugar de `asin` se puede enviar
+ *           `url` con cualquier enlace de producto de Amazon.
+ *
+ * Guarda o actualiza por ASIN en Supabase (Postgres vía Drizzle) e inyecta el
+ * tag de afiliado en las URLs recibidas.
  */
 export async function POST(request: Request) {
-  if (!isAuthorized(request)) return unauthorized();
+  const denied = authError(checkApiKey(request));
+  if (denied) return denied;
   if (!isDatabaseConfigured) return dbNotConfigured();
 
   const body = await readJson(request);
   if (body === undefined) return badRequest("El cuerpo debe ser JSON válido");
   const normalized = Array.isArray(body)
     ? { products: body }
-    : body && typeof body === "object" && "asin" in body
+    : body && typeof body === "object" && ("asin" in body || "url" in body)
       ? { products: [body] }
       : body;
 

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { detectMarketplace, extractAsin } from "../amazon";
 
 const asin = z
   .string()
@@ -9,8 +10,34 @@ const asin = z
 const price = z.coerce.number().nonnegative().max(1_000_000);
 const url = z.string().trim().url();
 
-/** Un producto tal y como lo envía n8n / Make. Solo `asin` es obligatorio para actualizar. */
-export const productInputSchema = z.object({
+/**
+ * Permite que n8n envíe solo la URL del producto: si falta `asin` se extrae de
+ * `url`, `amazon_url_es` o `amazon_url_us`, y `url` se guarda en el campo del
+ * marketplace que corresponda a su dominio.
+ */
+function normalizeProductInput(raw: unknown): unknown {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return raw;
+  const item = { ...(raw as Record<string, unknown>) };
+  const url = typeof item.url === "string" ? item.url : undefined;
+  if (url) {
+    const field = detectMarketplace(url) === "us" ? "amazon_url_us" : "amazon_url_es";
+    item[field] ??= url;
+  }
+  if (!item.asin) {
+    for (const candidate of [url, item.amazon_url_es, item.amazon_url_us]) {
+      const asin = typeof candidate === "string" ? extractAsin(candidate) : null;
+      if (asin) {
+        item.asin = asin;
+        break;
+      }
+    }
+  }
+  delete item.url;
+  return item;
+}
+
+/** Un producto tal y como lo envía n8n / Make. Solo `asin` (o una URL de Amazon con ASIN) es obligatorio para actualizar. */
+const productObjectSchema = z.object({
   asin,
   title: z.string().trim().min(3).max(500).optional(),
   slug: z.string().trim().min(3).max(200).regex(/^[a-z0-9-]+$/).optional(),
@@ -37,6 +64,8 @@ export const productInputSchema = z.object({
   is_featured: z.boolean().optional(),
   is_available: z.boolean().optional(),
 });
+
+export const productInputSchema = z.preprocess(normalizeProductInput, productObjectSchema);
 
 export const productsSyncSchema = z.object({
   products: z.array(productInputSchema).min(1).max(500),

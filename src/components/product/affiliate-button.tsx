@@ -4,7 +4,7 @@ import { useSyncExternalStore } from "react";
 import { ExternalLink } from "lucide-react";
 import type { VariantProps } from "class-variance-authority";
 import { Button, type buttonVariants } from "@/components/ui/button";
-import { AFFILIATE_REL, COUNTRY_COOKIE, marketplaceForCountry, type AffiliateLinks } from "@/lib/amazon";
+import { AFFILIATE_REL, AFFILIATE_TARGET, COUNTRY_COOKIE, marketplaceForCountry, type AffiliateLinks } from "@/lib/amazon";
 import { beaconClick, trackEvent } from "@/lib/analytics";
 import type { Marketplace } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -53,7 +53,7 @@ export function AffiliateButton({
     <Button asChild variant={variant} size={size} className={cn("w-full sm:w-auto", className)}>
       <a
         href={href}
-        target="_blank"
+        target={AFFILIATE_TARGET}
         rel={AFFILIATE_REL}
         data-asin={product.asin}
         data-placement={placement}
