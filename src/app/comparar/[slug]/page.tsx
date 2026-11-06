@@ -98,10 +98,10 @@ export default async function ComparisonPage({ params }: PageProps<"/comparar/[s
         ]}
       />
       <header className="mt-6 mb-8 max-w-3xl space-y-3">
-        <h1 className="text-3xl font-extrabold tracking-tight text-balance sm:text-4xl">
+        <h1 className="text-3xl type-heading text-ink sm:text-4xl">
           {an} vs {bn}: ¿cuál comprar?
         </h1>
-        <p className="text-lg text-muted-foreground">
+        <p className="text-lg text-ink-3">
           Comparamos precio, especificaciones y nuestra experiencia de uso con ambos modelos de{" "}
           {a.categoryName?.toLowerCase() ?? "la categoría"}.
         </p>
@@ -112,21 +112,21 @@ export default async function ComparisonPage({ params }: PageProps<"/comparar/[s
         <div className="flex gap-3 rounded-xl border border-primary/40 bg-primary/5 p-5">
           <Trophy className="mt-0.5 size-6 shrink-0 text-primary" aria-hidden />
           <div>
-            <p className="text-sm text-muted-foreground">Mejor en conjunto</p>
+            <p className="text-sm text-ink-3">Mejor en conjunto</p>
             <p className="font-semibold">
               <Link href={`/resenas/${verdict.winner.slug}`} className="hover:underline">
                 {shortName(verdict.winner.title)}
               </Link>{" "}
               · {verdict.winner.editorialRating?.toFixed(1)}/10
             </p>
-            {verdict.winner.verdict && <p className="mt-1 text-sm text-muted-foreground">{verdict.winner.verdict}</p>}
+            {verdict.winner.verdict && <p className="mt-1 text-sm text-ink-3">{verdict.winner.verdict}</p>}
           </div>
         </div>
         {verdict.cheaper && (
           <div className="flex gap-3 rounded-xl border border-success/40 bg-success/5 p-5">
             <Wallet className="mt-0.5 size-6 shrink-0 text-success" aria-hidden />
             <div>
-              <p className="text-sm text-muted-foreground">Opción más económica</p>
+              <p className="text-sm text-ink-3">Opción más económica</p>
               <p className="font-semibold">
                 <Link href={`/resenas/${verdict.cheaper.slug}`} className="hover:underline">
                   {shortName(verdict.cheaper.title)}

@@ -16,7 +16,9 @@ import { ProductBadge } from "@/components/product/product-badge";
 import { ProductCard } from "@/components/product/product-card";
 import { ProductImage } from "@/components/product/product-image";
 import { ProsCons } from "@/components/product/pros-cons";
-import { EditorialScore, RatingStars } from "@/components/product/rating-stars";
+import { MobileBuyBar } from "@/components/product/mobile-buy-bar";
+import { RatingStars } from "@/components/product/rating-stars";
+import { ScoreGauge } from "@/components/product/score-gauge";
 import { SpecsTable } from "@/components/product/specs-table";
 import { JsonLd } from "@/components/seo/json-ld";
 import { resolveAffiliateLinks } from "@/lib/amazon";
@@ -77,25 +79,23 @@ export default async function ReviewPage({ params }: PageProps<"/resenas/[slug]"
 
       {/* ── Primer pliegue: SIN AdSense, foco total en el CTA de Amazon ── */}
       <section className="mt-6 grid gap-8 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
-        <div className="rounded-2xl border bg-white p-2">
+        <div className="test-sheet overflow-hidden">
           <ProductImage src={product.imageUrl} alt={product.title} priority sizes="(min-width: 768px) 40vw, 100vw" />
         </div>
         <div className="flex flex-col gap-4">
           <div className="flex flex-wrap items-center gap-2">
             <ProductBadge badge={product.badge} />
-            {product.brand && <span className="text-sm text-muted-foreground">{product.brand}</span>}
+            {product.brand && <span className="type-label">{product.brand}</span>}
           </div>
-          <h1 className="text-3xl font-extrabold leading-tight tracking-tight text-balance">{product.title}</h1>
-          <div className="flex flex-wrap items-center gap-4">
-            <EditorialScore score={product.editorialRating} />
-            <RatingStars rating={product.rating} count={product.reviewCount} />
-          </div>
+          <h1 className="type-heading text-3xl text-ink sm:text-[2.25rem]">{product.title}</h1>
           {product.verdict && (
-            <p className="rounded-xl border-l-4 border-primary bg-accent/50 p-4 text-base">
-              <strong className="font-semibold">Veredicto: </strong>
+            <p className="border-l-2 border-measure pl-4 text-[1.0625rem] leading-relaxed text-ink-2">
+              <strong className="font-semibold text-ink">Veredicto: </strong>
               {product.verdict}
             </p>
           )}
+          <ScoreGauge score={product.editorialRating} size="lg" />
+          <RatingStars rating={product.rating} count={product.reviewCount} />
           <PriceTag
             current={product.priceCurrent}
             original={product.priceOriginal}
@@ -104,8 +104,9 @@ export default async function ReviewPage({ params }: PageProps<"/resenas/[slug]"
             size="lg"
           />
           <AffiliateButton product={product} links={links} placement="review_hero" size="xl" />
-          <p className="text-xs text-muted-foreground">
-            Precio orientativo en Amazon.es, actualizado el {formatDate(product.updatedAt)}. Puede variar.
+          <p className="text-xs text-ink-3">
+            Precio orientativo en Amazon.es, revisado el{" "}
+            <time dateTime={product.updatedAt}>{formatDate(product.updatedAt)}</time>. Puede variar.
           </p>
           <AffiliateDisclosure />
         </div>
@@ -114,14 +115,14 @@ export default async function ReviewPage({ params }: PageProps<"/resenas/[slug]"
       <div className="mt-14 grid gap-12 lg:grid-cols-[minmax(0,1fr)_300px]">
         <div className="min-w-0 space-y-12">
           <section aria-labelledby="pros-cons">
-            <h2 id="pros-cons" className="mb-4 text-2xl font-bold tracking-tight">
+            <h2 id="pros-cons" className="type-heading mb-4 text-2xl text-ink">
               Pros y contras
             </h2>
             <ProsCons pros={product.pros} cons={product.cons} />
           </section>
 
           <section aria-labelledby="specs">
-            <h2 id="specs" className="mb-4 text-2xl font-bold tracking-tight">
+            <h2 id="specs" className="type-heading mb-4 text-2xl text-ink">
               Especificaciones clave
             </h2>
             <SpecsTable features={product.features} />
@@ -165,7 +166,7 @@ export default async function ReviewPage({ params }: PageProps<"/resenas/[slug]"
                       className="flex items-center justify-between gap-2 rounded-md p-2 hover:bg-accent"
                     >
                       <span>
-                        {name} <span className="text-muted-foreground">vs</span> {shortName(r.title)}
+                        {name} <span className="text-ink-3">vs</span> {shortName(r.title)}
                       </span>
                       <ArrowRight className="size-4 shrink-0" aria-hidden />
                     </Link>
@@ -187,7 +188,7 @@ export default async function ReviewPage({ params }: PageProps<"/resenas/[slug]"
 
       {related.length > 0 && (
         <section className="mt-16">
-          <h2 className="mb-6 text-2xl font-bold tracking-tight">Alternativas a {name}</h2>
+          <h2 className="mb-6 type-heading text-2xl text-ink">Alternativas a {name}</h2>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {related.map((p) => (
               <ProductCard key={p.id} product={p} placement="review_alternatives" />
@@ -195,6 +196,8 @@ export default async function ReviewPage({ params }: PageProps<"/resenas/[slug]"
           </div>
         </section>
       )}
+      <MobileBuyBar product={product} />
+      <div className="h-16 md:hidden" aria-hidden />
     </Container>
   );
 }

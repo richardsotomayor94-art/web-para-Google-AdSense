@@ -7,7 +7,7 @@ import { HttpsProxyAgent } from "https-proxy-agent";
 import ws from "ws";
 import { setNeonWebSocket } from "../src/db/neon";
 
-export function useHttpsProxyIfConfigured(): void {
+export function enableHttpsProxyIfConfigured(): void {
   const proxy = process.env.HTTPS_PROXY || process.env.https_proxy;
   if (!proxy || process.env.NEON_LOCAL_WS_PROXY) return;
   const agent = new HttpsProxyAgent(proxy);

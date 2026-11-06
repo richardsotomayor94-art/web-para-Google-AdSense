@@ -66,14 +66,14 @@ export default async function GuidePage({ params }: PageProps<"/guias/[slug]">) 
       <div className="mt-6 grid gap-10 lg:grid-cols-[minmax(0,1fr)_260px]">
         <article className="min-w-0">
           <header className="mb-8 space-y-4">
-            <h1 className="text-3xl font-extrabold leading-tight tracking-tight text-balance sm:text-4xl">{article.title}</h1>
-            {article.excerpt && <p className="text-lg text-muted-foreground text-pretty">{article.excerpt}</p>}
+            <h1 className="text-3xl type-heading text-ink sm:text-4xl">{article.title}</h1>
+            {article.excerpt && <p className="text-lg text-ink-3 text-pretty">{article.excerpt}</p>}
             <AuthorByline
               author={article.author}
               date={formatDate(article.publishedAt)}
               updated={formatDate(article.updatedAt)}
             />
-            <p className="text-sm text-muted-foreground">{readingTimeMinutes(article.content)} min de lectura</p>
+            <p className="text-sm text-ink-3">{readingTimeMinutes(article.content)} min de lectura</p>
             {allProducts.length > 0 && <AffiliateDisclosure />}
           </header>
 
@@ -88,7 +88,7 @@ export default async function GuidePage({ params }: PageProps<"/guias/[slug]">) 
 
           {related.length > 0 && (
             <section className="mt-12">
-              <h2 className="mb-6 text-2xl font-bold tracking-tight">Productos recomendados en esta guía</h2>
+              <h2 className="mb-6 type-heading text-2xl text-ink">Productos recomendados en esta guía</h2>
               <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
                 {related.map((p) => (
                   <ProductCard key={p.id} product={p} placement="article_related" />
@@ -102,7 +102,7 @@ export default async function GuidePage({ params }: PageProps<"/guias/[slug]">) 
           <aside className="hidden lg:block">
             <nav aria-label="Índice" className="sticky top-24 space-y-3 rounded-xl border p-4 text-sm">
               <p className="font-semibold">En esta guía</p>
-              <ol className="space-y-2 text-muted-foreground">
+              <ol className="space-y-2 text-ink-3">
                 {toc.map((item) => (
                   <li key={item.id}>
                     <Link href={`#${item.id}`} className="hover:text-foreground">

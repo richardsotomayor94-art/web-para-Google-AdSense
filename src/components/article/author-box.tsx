@@ -5,16 +5,20 @@ import type { ArticleAuthor } from "@/lib/types";
 export function AuthorByline({ author, date, updated }: { author: ArticleAuthor | null; date?: string | null; updated?: string | null }) {
   const a = author ?? defaultAuthor;
   return (
-    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-ink-3">
       <span className="grid size-9 place-items-center rounded-full bg-accent font-semibold text-accent-foreground">
         {a.name.charAt(0)}
       </span>
       <span>
         Por <span className="font-medium text-foreground">{a.name}</span>
-        {a.role && <span className="hidden sm:inline"> · {a.role}</span>}
+        {a.role && <span className="hidden sm:inline">, {a.role.charAt(0).toLowerCase() + a.role.slice(1)}</span>}
       </span>
-      {date && <span>· Publicado el {date}</span>}
-      {updated && updated !== date && <span>· Actualizado el {updated}</span>}
+      {(date || updated) && (
+        <span className="basis-full sm:basis-auto">
+          {date && <>Publicado el {date}. </>}
+          {updated && updated !== date && <>Revisado el {updated}.</>}
+        </span>
+      )}
     </div>
   );
 }
@@ -31,7 +35,7 @@ export function AuthorBox({ author }: { author: ArticleAuthor | null }) {
           {a.name} <BadgeCheck className="size-4 text-primary" aria-label="Autor verificado" />
         </p>
         {a.role && <p className="text-sm text-primary">{a.role}</p>}
-        {a.bio && <p className="text-sm text-muted-foreground">{a.bio}</p>}
+        {a.bio && <p className="text-sm text-ink-3">{a.bio}</p>}
         {a.credentials?.length ? (
           <ul className="flex flex-wrap gap-2 pt-1">
             {a.credentials.map((c) => (

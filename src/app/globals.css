@@ -3,62 +3,87 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* ─── Tokens (shadcn/ui, paleta "neutral" + acento esmeralda y CTA naranja) ─── */
+/*
+ * ErgoTopLab · sistema visual "laboratorio de mediciones"
+ * ─────────────────────────────────────────────────────────
+ * paper   #F3F5F4  papel de laboratorio, frío
+ * ink     #16201C  grafito verdoso (texto y trazos)
+ * measure #2F5BEA  azul de cota: SOLO mediciones, datos y enlaces
+ * cta     #FFB224  ámbar: SOLO botones de compra
+ * pass    #1F8A5B  nota alta / pros
+ * fail    #C2412D  contras / avisos
+ * Un único efecto firma: el diagrama antropométrico del hero.
+ */
 :root {
-  --radius: 0.75rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.18 0.01 260);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.18 0.01 260);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0.01 260);
-  --primary: oklch(0.52 0.12 165);
-  --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.967 0.003 260);
-  --secondary-foreground: oklch(0.21 0.01 260);
-  --muted: oklch(0.967 0.003 260);
-  --muted-foreground: oklch(0.48 0.015 260);
-  --accent: oklch(0.96 0.03 165);
-  --accent-foreground: oklch(0.3 0.07 165);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.92 0.004 260);
-  --input: oklch(0.92 0.004 260);
-  --ring: oklch(0.52 0.12 165);
-  /* CTA de compra (naranja de alto contraste) */
-  --cta: oklch(0.7 0.18 50);
-  --cta-hover: oklch(0.64 0.18 45);
-  --cta-foreground: oklch(0.2 0.03 50);
-  --success: oklch(0.6 0.15 150);
-  --warning: oklch(0.8 0.15 85);
+  --paper: #f3f5f4;
+  --paper-2: #e9edeb;
+  --ink: #16201c;
+  --ink-2: #3c4842;
+  --ink-3: #66726c;
+  --rule: #cfd7d3;
+  --measure: #2f5bea;
+  --measure-soft: #e3e9fd;
+  --cta: #ffb224;
+  --cta-hover: #f59f00;
+  --cta-ink: #1d1406;
+  --pass: #1f8a5b;
+  --fail: #c2412d;
+
+  --radius: 0.625rem;
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --card: #ffffff;
+  --card-foreground: var(--ink);
+  --popover: #ffffff;
+  --popover-foreground: var(--ink);
+  --primary: var(--ink);
+  --primary-foreground: var(--paper);
+  --secondary: var(--paper-2);
+  --secondary-foreground: var(--ink);
+  --muted: var(--paper-2);
+  --muted-foreground: var(--ink-3);
+  --accent: var(--measure-soft);
+  --accent-foreground: var(--measure);
+  --destructive: var(--fail);
+  --border: var(--rule);
+  --input: var(--rule);
+  --ring: var(--measure);
+  --success: var(--pass);
+  --warning: #e2a400;
 }
 
 .dark {
-  --background: oklch(0.16 0.01 260);
-  --foreground: oklch(0.96 0.003 260);
-  --card: oklch(0.205 0.012 260);
-  --card-foreground: oklch(0.96 0.003 260);
-  --popover: oklch(0.205 0.012 260);
-  --popover-foreground: oklch(0.96 0.003 260);
-  --primary: oklch(0.72 0.13 165);
-  --primary-foreground: oklch(0.18 0.03 165);
-  --secondary: oklch(0.27 0.012 260);
-  --secondary-foreground: oklch(0.96 0.003 260);
-  --muted: oklch(0.27 0.012 260);
-  --muted-foreground: oklch(0.72 0.012 260);
-  --accent: oklch(0.3 0.05 165);
-  --accent-foreground: oklch(0.92 0.05 165);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 12%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.72 0.13 165);
-  --cta: oklch(0.76 0.16 55);
-  --cta-hover: oklch(0.8 0.15 60);
-  --cta-foreground: oklch(0.2 0.03 50);
+  --paper: #0f1513;
+  --paper-2: #18201d;
+  --ink: #e8eeeb;
+  --ink-2: #c3ccc8;
+  --ink-3: #8e9a94;
+  --rule: #2a3531;
+  --measure: #7b9bff;
+  --measure-soft: #1a2442;
+  --cta: #ffbe45;
+  --cta-hover: #ffcf70;
+  --pass: #3fbf86;
+  --fail: #ef7a63;
+
+  --card: #141b18;
+  --card-foreground: var(--ink);
+  --popover: #141b18;
 }
 
 @theme inline {
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, monospace;
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-rule: var(--rule);
+  --color-measure: var(--measure);
+  --color-measure-soft: var(--measure-soft);
+  --color-pass: var(--pass);
+  --color-fail: var(--fail);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -79,67 +104,255 @@
   --color-ring: var(--ring);
   --color-cta: var(--cta);
   --color-cta-hover: var(--cta-hover);
-  --color-cta-foreground: var(--cta-foreground);
+  --color-cta-foreground: var(--cta-ink);
   --color-success: var(--success);
   --color-warning: var(--warning);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
+  /* Radios con jerarquía: 2px datos técnicos · 10px fichas · píldora para CTA */
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  --radius-xl: 14px;
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border outline-ring/60;
   }
   html {
     scroll-behavior: smooth;
+    text-rendering: optimizeLegibility;
   }
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-feature-settings: "kern" 1, "liga" 1;
+  }
+  :focus-visible {
+    outline: 2px solid var(--measure);
+    outline-offset: 2px;
+  }
+  ::selection {
+    background: var(--measure);
+    color: #fff;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
   }
 }
 
-/* ─── Tipografía del contenido editorial (Markdown) ─── */
+/* ─── Tipografía: una sola familia, el ancho hace de contraste ─── */
 @layer components {
+  /* Titulares: Archivo expandido, como una etiqueta de ensayo */
+  .type-display {
+    font-stretch: 125%;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.02;
+    text-wrap: balance;
+  }
+  .type-heading {
+    font-stretch: 116%;
+    font-weight: 750;
+    letter-spacing: -0.012em;
+    line-height: 1.12;
+    text-wrap: balance;
+  }
+  /* Cifras de medición: tabulares, algo estrechas para que quepan en las cotas */
+  .type-figure {
+    font-variant-numeric: tabular-nums;
+    font-stretch: 92%;
+    font-weight: 650;
+  }
+  /* Etiqueta de dato (en minúscula, nada de mayúsculas espaciadas) */
+  .type-label {
+    font-size: 0.8125rem;
+    font-weight: 550;
+    color: var(--ink-3);
+  }
+
+  /* Regla de calibración: separador con marcas cada 8 px y cada 64 px */
+  .ruler {
+    height: 10px;
+    background-image:
+      repeating-linear-gradient(to right, var(--rule) 0 1px, transparent 1px 8px),
+      repeating-linear-gradient(to right, var(--ink-3) 0 1px, transparent 1px 64px);
+    background-size: 100% 5px, 100% 10px;
+    background-repeat: no-repeat;
+    background-position: bottom left, bottom left;
+    opacity: 0.75;
+  }
+
+  /* Ficha de ensayo: borde fino y lengüeta azul de "muestra" */
+  .test-sheet {
+    position: relative;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+  }
+  .test-sheet::before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    right: 18px;
+    width: 34px;
+    height: 5px;
+    background: var(--measure);
+    border-radius: 0 0 2px 2px;
+  }
+
+  /* Medidor de nota: barra 0–10 con una marca por punto */
+  .gauge-track {
+    position: relative;
+    height: 8px;
+    border-radius: 2px;
+    background: var(--paper-2);
+    overflow: hidden;
+  }
+  .gauge-track::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(to right, transparent 0 calc(10% - 1px), var(--card) calc(10% - 1px) 10%);
+  }
+  .gauge-fill {
+    position: absolute;
+    inset: 0 auto 0 0;
+    background: var(--measure);
+    transform-origin: left;
+  }
+  .gauge-fill[data-tone="pass"] {
+    background: var(--pass);
+  }
+
+  /* Revelado: visible por defecto; solo se anima si hay JS (clase .js en <html>) */
+  .js .reveal {
+    opacity: 0;
+    transform: translateY(10px);
+    transition:
+      opacity 0.5s ease,
+      transform 0.5s ease;
+  }
+  .js .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+  .js .reveal .gauge-fill {
+    transform: scaleX(0);
+    transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 0.15s;
+  }
+  .js .reveal.is-visible .gauge-fill {
+    transform: scaleX(1);
+  }
+
+  /* ─── Diagrama antropométrico (efecto firma) ─── */
+  .lab-diagram .figure {
+    stroke: var(--ink);
+  }
+  .lab-diagram .dim line,
+  .lab-diagram .dim path {
+    stroke: var(--measure);
+    stroke-width: 1.3;
+    fill: none;
+  }
+  .lab-diagram .ext {
+    stroke: var(--measure);
+    stroke-width: 1;
+    stroke-dasharray: 3 3;
+    opacity: 0.8;
+  }
+  .lab-diagram .sight {
+    stroke: var(--measure);
+    stroke-width: 1.2;
+    stroke-dasharray: 2 5;
+    fill: none;
+    opacity: 0.7;
+  }
+  .lab-diagram .angle path {
+    stroke: var(--ink-3);
+    stroke-width: 1.2;
+    fill: none;
+  }
+  .lab-diagram text {
+    font-family: var(--font-archivo), sans-serif;
+    font-variant-numeric: tabular-nums;
+    paint-order: stroke;
+    stroke: var(--card);
+    stroke-width: 4px;
+    stroke-linejoin: round;
+  }
+  .lab-diagram .dim-label {
+    fill: var(--measure);
+    font-size: 16px;
+    font-weight: 700;
+    font-stretch: 92%;
+  }
+  .lab-diagram .angle-label {
+    fill: var(--ink-3);
+    font-size: 12.5px;
+    font-weight: 600;
+  }
+  .lab-range {
+    accent-color: var(--measure);
+    height: 1.25rem;
+    cursor: pointer;
+  }
+
+  /* ─── Contenido editorial (Markdown) ─── */
   .prose-eh {
-    @apply max-w-none text-[1.0625rem] leading-relaxed text-foreground/90;
+    @apply max-w-[68ch] text-[1.0625rem] leading-[1.7] text-ink-2;
   }
   .prose-eh > * + * {
     @apply mt-5;
   }
   .prose-eh h2 {
-    @apply mt-12 scroll-mt-24 text-2xl font-bold tracking-tight text-foreground;
+    @apply mt-14 scroll-mt-24 text-[1.625rem] text-ink;
+    font-stretch: 116%;
+    font-weight: 750;
+    letter-spacing: -0.012em;
+    line-height: 1.15;
   }
   .prose-eh h3 {
-    @apply mt-8 scroll-mt-24 text-xl font-semibold text-foreground;
+    @apply mt-9 scroll-mt-24 text-xl font-bold text-ink;
   }
   .prose-eh a {
-    @apply font-medium text-primary underline underline-offset-4 hover:no-underline;
+    @apply font-medium text-measure underline decoration-measure/40 underline-offset-4 hover:decoration-measure;
   }
   .prose-eh ul {
-    @apply list-disc space-y-2 pl-6;
+    @apply list-disc space-y-2 pl-6 marker:text-measure;
   }
   .prose-eh ol {
-    @apply list-decimal space-y-2 pl-6;
+    @apply list-decimal space-y-2 pl-6 marker:font-semibold marker:text-measure;
   }
   .prose-eh strong {
-    @apply font-semibold text-foreground;
+    @apply font-semibold text-ink;
   }
   .prose-eh blockquote {
-    @apply rounded-r-lg border-l-4 border-primary bg-accent/50 px-5 py-3 text-foreground/80;
+    @apply border-l-2 border-measure bg-measure-soft/60 px-5 py-3 text-ink-2;
   }
   .prose-eh table {
-    @apply w-full border-collapse overflow-hidden rounded-lg text-sm;
+    @apply w-full border-collapse text-sm;
+    font-variant-numeric: tabular-nums;
   }
   .prose-eh th {
-    @apply border-b bg-muted px-4 py-2 text-left font-semibold;
+    @apply border-b-2 border-ink px-4 py-2 text-left font-semibold text-ink;
   }
   .prose-eh td {
-    @apply border-b px-4 py-2;
+    @apply border-b border-rule px-4 py-2;
   }
   .prose-eh code {
-    @apply rounded bg-muted px-1.5 py-0.5 font-mono text-sm;
+    @apply rounded-xs bg-paper-2 px-1.5 py-0.5 text-sm;
+  }
+}
+
+/* Movimiento reducido: solo se quita lo intrusivo (desplazamiento y barridos); el fundido se mantiene */
+@media (prefers-reduced-motion: reduce) {
+  .js .reveal {
+    transform: none;
+  }
+  .js .reveal .gauge-fill {
+    transform: none;
+    transition: none;
   }
 }

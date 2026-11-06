@@ -16,8 +16,8 @@ export function renderOg({ eyebrow, title, footer }: { eyebrow: string; title: s
           flexDirection: "column",
           justifyContent: "space-between",
           padding: 72,
-          background: "linear-gradient(135deg, #ecfdf5 0%, #ffffff 55%, #fff7ed 100%)",
-          color: "#111827",
+          background: "#f3f5f4",
+          color: "#16201c",
           fontFamily: "sans-serif",
         }}
       >
@@ -28,7 +28,7 @@ export function renderOg({ eyebrow, title, footer }: { eyebrow: string; title: s
               width: 64,
               height: 64,
               borderRadius: 16,
-              background: "#0f9f7a",
+              background: "#16201c",
               color: "white",
               fontSize: 28,
               fontWeight: 800,
@@ -40,16 +40,16 @@ export function renderOg({ eyebrow, title, footer }: { eyebrow: string; title: s
           </div>
           <div style={{ display: "flex", fontSize: 36, fontWeight: 800 }}>
             <span>ErgoTop</span>
-            <span style={{ color: "#0f9f7a", marginLeft: -9 }}>Lab</span>
+            <span style={{ color: "#66726c", marginLeft: -9 }}>Lab</span>
           </div>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-          <div style={{ display: "flex", fontSize: 28, color: "#0f9f7a", fontWeight: 700, textTransform: "uppercase", letterSpacing: 2 }}>
+          <div style={{ display: "flex", fontSize: 28, color: "#2f5bea", fontWeight: 700 }}>
             {eyebrow}
           </div>
           <div style={{ display: "flex", fontSize: title.length > 70 ? 54 : 66, fontWeight: 800, lineHeight: 1.1 }}>{title}</div>
         </div>
-        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 26, color: "#4b5563" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 26, color: "#3c4842", borderTop: "2px solid #cfd7d3", paddingTop: 24 }}>
           <span>{footer ?? siteConfig.tagline}</span>
           <span>{siteConfig.url.replace(/^https?:\/\//, "")}</span>
         </div>

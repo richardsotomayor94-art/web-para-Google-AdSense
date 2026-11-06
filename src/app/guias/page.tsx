@@ -23,8 +23,8 @@ export default async function GuidesIndexPage() {
       <JsonLd data={graph(articleListJsonLd(articles))} />
       <Breadcrumbs items={[{ name: "Guías", path: "/guias" }]} />
       <header className="mt-6 mb-10 max-w-3xl space-y-3">
-        <h1 className="text-4xl font-extrabold tracking-tight">Guías de ergonomía</h1>
-        <p className="text-lg text-muted-foreground">
+        <h1 className="text-4xl type-heading text-ink">Guías de ergonomía</h1>
+        <p className="text-lg text-ink-3">
           Soluciones prácticas a los problemas reales del teletrabajo: dolor lumbar, cervicales, muñecas y fatiga visual.
           Cada guía cita medidas concretas y está revisada por profesionales sanitarios.
         </p>

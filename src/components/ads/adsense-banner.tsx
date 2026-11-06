@@ -56,7 +56,7 @@ export function AdSenseBanner({
     return (
       <div
         className={cn(
-          "my-8 flex items-center justify-center rounded-lg border border-dashed text-xs text-muted-foreground",
+          "my-8 flex items-center justify-center rounded-lg border border-dashed text-xs text-ink-3",
           className,
         )}
         style={{ minHeight }}
@@ -71,7 +71,7 @@ export function AdSenseBanner({
 
   return (
     <aside className={cn("my-8", className)} aria-label={label}>
-      <p className="mb-1 text-center text-[10px] uppercase tracking-wider text-muted-foreground">{label}</p>
+      <p className="mb-1 text-center text-[10px] uppercase tracking-wider text-ink-3">{label}</p>
       <ins
         ref={ref}
         className="adsbygoogle block"

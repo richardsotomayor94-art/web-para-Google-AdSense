@@ -13,7 +13,7 @@ export function Breadcrumbs({ items, withJsonLd = true }: { items: Crumb[]; with
   return (
     <>
       {withJsonLd && <JsonLd data={graph(breadcrumbJsonLd(all))} />}
-      <nav aria-label="Ruta de navegación" className="text-sm text-muted-foreground">
+      <nav aria-label="Ruta de navegación" className="text-sm text-ink-3">
         <ol className="flex flex-wrap items-center gap-1">
           {all.map((item, i) => (
             <li key={item.path} className="flex items-center gap-1">

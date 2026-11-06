@@ -41,6 +41,7 @@ export function organizationJsonLd(): Thing {
     description: siteConfig.description,
     email: siteConfig.email,
     image: { "@id": `${siteConfig.url}/#logo` },
+    publishingPrinciples: absoluteUrl("/sobre-nosotros#metodologia"),
     knowsAbout: ["Ergonomía", "Teletrabajo", "Sillas ergonómicas", "Escritorios elevables", "Salud postural"],
     contactPoint: { "@type": "ContactPoint", contactType: "editorial", email: siteConfig.email, availableLanguage: ["es"] },
   };

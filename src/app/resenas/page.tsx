@@ -30,8 +30,8 @@ export default async function ReviewsIndexPage() {
       />
       <Breadcrumbs items={[{ name: "Reseñas", path: "/resenas" }]} />
       <header className="mt-6 mb-8 max-w-3xl space-y-3">
-        <h1 className="text-4xl font-extrabold tracking-tight">Reseñas de productos ergonómicos</h1>
-        <p className="text-lg text-muted-foreground">
+        <h1 className="text-4xl type-heading text-ink">Reseñas de productos ergonómicos</h1>
+        <p className="text-lg text-ink-3">
           Cada producto pasa un mínimo de cuatro semanas en uso diario. Puntuamos ajustes, materiales, estabilidad y
           relación calidad-precio sobre 10.
         </p>
@@ -49,8 +49,8 @@ export default async function ReviewsIndexPage() {
       <div className="space-y-16">
         {groups.map(({ category, items }) => (
           <section key={category.id} id={category.slug} className="scroll-mt-24">
-            <h2 className="text-2xl font-bold tracking-tight">{category.name}</h2>
-            {category.description && <p className="mt-1 mb-6 text-muted-foreground">{category.description}</p>}
+            <h2 className="type-heading text-2xl text-ink">{category.name}</h2>
+            {category.description && <p className="mt-1 mb-6 text-ink-3">{category.description}</p>}
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {items.map((p) => (
                 <ProductCard key={p.id} product={p} placement="reviews_index" />
@@ -60,7 +60,7 @@ export default async function ReviewsIndexPage() {
         ))}
         {uncategorized.length > 0 && (
           <section>
-            <h2 className="mb-6 text-2xl font-bold tracking-tight">Otros productos</h2>
+            <h2 className="mb-6 type-heading text-2xl text-ink">Otros productos</h2>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {uncategorized.map((p) => (
                 <ProductCard key={p.id} product={p} placement="reviews_index" />

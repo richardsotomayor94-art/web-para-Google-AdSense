@@ -68,7 +68,7 @@ export function ComparisonTable({ products, placement = "comparison_table" }: { 
         <table className="w-full min-w-[560px] border-collapse text-sm">
           <thead>
             <tr className="border-b align-top">
-              <th scope="col" className="sticky left-0 z-10 w-36 bg-card p-3 text-left text-xs font-medium uppercase text-muted-foreground sm:w-48">
+              <th scope="col" className="sticky left-0 z-10 w-36 bg-card p-3 text-left text-xs font-medium uppercase text-ink-3 sm:w-48">
                 Producto
               </th>
               {products.map((p) => (
@@ -105,7 +105,7 @@ export function ComparisonTable({ products, placement = "comparison_table" }: { 
               {products.map((p) => (
                 <td key={p.id} className={cn("p-3 text-base font-bold", p.editorialRating === bestScore && "text-primary")}>
                   {p.editorialRating?.toFixed(1) ?? "—"}
-                  <span className="text-xs font-normal text-muted-foreground"> / 10</span>
+                  <span className="text-xs font-normal text-ink-3"> / 10</span>
                 </td>
               ))}
             </Row>
@@ -143,7 +143,7 @@ export function ComparisonTable({ products, placement = "comparison_table" }: { 
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <tr className="border-b even:bg-muted/30">
-      <th scope="row" className="sticky left-0 z-10 bg-card p-3 text-left font-medium text-muted-foreground">
+      <th scope="row" className="sticky left-0 z-10 bg-card p-3 text-left font-medium text-ink-3">
         {label}
       </th>
       {children}

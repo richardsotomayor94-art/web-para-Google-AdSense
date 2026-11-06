@@ -11,7 +11,7 @@ export function GET() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#0f9f7a",
+          background: "#16201c",
           borderRadius: 112,
           color: "white",
           fontSize: 220,

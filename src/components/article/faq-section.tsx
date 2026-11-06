@@ -5,7 +5,7 @@ export function FaqSection({ faqs, title = "Preguntas frecuentes" }: { faqs: Faq
   if (!faqs.length) return null;
   return (
     <section aria-labelledby="faq" className="mt-12">
-      <h2 id="faq" className="mb-4 text-2xl font-bold tracking-tight">
+      <h2 id="faq" className="mb-4 type-heading text-2xl text-ink">
         {title}
       </h2>
       <div className="divide-y rounded-xl border">
@@ -15,7 +15,7 @@ export function FaqSection({ faqs, title = "Preguntas frecuentes" }: { faqs: Faq
               <h3 className="text-base">{f.question}</h3>
               <ChevronDown className="size-4 shrink-0 transition-transform group-open:rotate-180" aria-hidden />
             </summary>
-            <p className="mt-3 text-muted-foreground">{f.answer}</p>
+            <p className="mt-3 text-ink-3">{f.answer}</p>
           </details>
         ))}
       </div>

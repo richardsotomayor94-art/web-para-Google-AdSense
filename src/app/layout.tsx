@@ -1,16 +1,26 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
-import { GeistSans } from "geist/font/sans";
-import { GeistMono } from "geist/font/mono";
+import localFont from "next/font/local";
 import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
+import { RevealScript } from "@/components/brand/reveal-script";
 import { JsonLd } from "@/components/seo/json-ld";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { getCategories } from "@/lib/data";
 import { graph, organizationJsonLd, websiteJsonLd } from "@/lib/seo/jsonld";
 import { siteConfig } from "@/lib/site";
 import "./globals.css";
+
+/** Archivo variable (pesos 100–900, anchos 62–125 %): una sola familia, el ancho marca la jerarquía. */
+const archivo = localFont({
+  src: "../fonts/archivo-variable.woff2",
+  variable: "--font-archivo",
+  weight: "100 900",
+  display: "swap",
+  declarations: [{ prop: "font-stretch", value: "62% 125%" }],
+  fallback: ["system-ui", "Segoe UI", "Roboto", "Arial", "sans-serif"],
+});
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID;
@@ -51,8 +61,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#16171d" },
+    { media: "(prefers-color-scheme: light)", color: "#f3f5f4" },
+    { media: "(prefers-color-scheme: dark)", color: "#0f1513" },
   ],
 };
 
@@ -60,9 +70,10 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   const categories = await getCategories();
 
   return (
-    <html lang="es" suppressHydrationWarning className={`${GeistSans.variable} ${GeistMono.variable} h-full antialiased`}>
+    <html lang="es" suppressHydrationWarning className={`${archivo.variable} h-full antialiased`}>
       {GTM_ID && <GoogleTagManager gtmId={GTM_ID} />}
       <body className="flex min-h-full flex-col font-sans">
+        <RevealScript />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <a
             href="#contenido"

@@ -6,5 +6,5 @@ export const size = ogSize;
 export const contentType = ogContentType;
 
 export default function Image() {
-  return renderOg({ eyebrow: "Ergonomía · Teletrabajo · Reseñas", title: "Teletrabaja sin dolor. Te decimos qué comprar y cómo ajustarlo." });
+  return renderOg({ eyebrow: "Laboratorio de ergonomía para teletrabajo", title: "Ergonomía medida, no opinada." });
 }
